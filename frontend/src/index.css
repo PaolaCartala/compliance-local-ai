@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Financial Compliance Design System - All colors MUST be HSL */
+
+@layer base {
+  :root {
+    /* Core Brand Colors - Financial Compliance Theme */
+    --background: 210 17% 98%;
+    --foreground: 215 25% 27%;
+
+    /* Trust Blue - Primary brand color for financial services */
+    --primary: 223 84% 31%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 223 84% 45%;
+
+    /* Approval Green - For compliance and success states */
+    --success: 158 64% 52%;
+    --success-foreground: 0 0% 98%;
+    --success-light: 158 64% 90%;
+
+    /* Review Orange - For items needing attention */
+    --warning: 25 95% 53%;
+    --warning-foreground: 0 0% 98%;
+    --warning-light: 25 95% 90%;
+
+    /* Compliance Red - For violations and errors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Professional Grays */
+    --muted: 210 17% 95%;
+    --muted-foreground: 215 16% 47%;
+    --neutral: 215 25% 27%;
+    --neutral-light: 215 25% 85%;
+
+    /* Card and Surface Colors */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 27%;
+    --card-subtle: 210 17% 99%;
+
+    /* Interactive Elements */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 223 84% 31%;
+    --accent: 210 17% 95%;
+    --accent-foreground: 215 25% 27%;
+
+    /* Popover and Dropdown */
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 27%;
+
+    /* Secondary Action Colors */
+    --secondary: 210 17% 95%;
+    --secondary-foreground: 215 25% 27%;
+
+    /* Design System Radius */
+    --radius: 0.75rem;
+
+    /* Financial Data Colors */
+    --data-positive: 158 64% 52%;
+    --data-negative: 0 84% 60%;
+    --data-neutral: 215 16% 47%;
+
+    /* Gradients for Premium Feel */
+    --gradient-primary: linear-gradient(135deg, hsl(223 84% 31%), hsl(223 84% 45%));
+    --gradient-success: linear-gradient(135deg, hsl(158 64% 52%), hsl(158 64% 60%));
+    --gradient-subtle: linear-gradient(180deg, hsl(210 17% 99%), hsl(210 17% 95%));
+    --gradient-trust: linear-gradient(135deg, hsl(223 84% 31%) 0%, hsl(215 84% 35%) 100%);
+
+    /* Professional Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(215 25% 27% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(215 25% 27% / 0.1), 0 2px 4px -1px hsl(215 25% 27% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(215 25% 27% / 0.1), 0 4px 6px -2px hsl(215 25% 27% / 0.05);
+    --shadow-compliance: 0 0 0 1px hsl(223 84% 31% / 0.1), 0 2px 4px hsl(223 84% 31% / 0.05);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Sidebar - Professional Navigation */
+    --sidebar-background: 215 25% 27%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 223 84% 31%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 215 25% 35%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 215 25% 35%;
+    --sidebar-ring: 223 84% 45%;
+  }
+
+  .dark {
+    --background: 215 25% 10%;
+    --foreground: 0 0% 98%;
+
+    --card: 215 25% 12%;
+    --card-foreground: 0 0% 98%;
+    --card-subtle: 215 25% 15%;
+
+    --popover: 215 25% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 223 84% 45%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 223 84% 55%;
+
+    --secondary: 215 25% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 215 25% 18%;
+    --muted-foreground: 215 16% 65%;
+
+    --accent: 215 25% 18%;
+    --accent-foreground: 0 0% 98%;
+
+    --border: 215 25% 18%;
+    --input: 215 25% 18%;
+    --ring: 223 84% 45%;
+
+    --sidebar-background: 215 25% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 223 84% 45%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 215 25% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 215 25% 15%;
+    --sidebar-ring: 223 84% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  /* Compliance Status Indicators */
+  .compliance-approved {
+    @apply text-success bg-success-light border border-success/20;
+  }
+
+  .compliance-pending {
+    @apply text-warning bg-warning-light border border-warning/20;
+  }
+
+  .compliance-flagged {
+    @apply text-destructive bg-destructive/5 border border-destructive/20;
+  }
+
+  /* Professional Data Tables */
+  .data-table-header {
+    @apply bg-muted/50 text-muted-foreground font-medium text-sm;
+  }
+
+  .data-row-hover {
+    @apply hover:bg-accent/50 transition-colors cursor-pointer;
+  }
+
+  /* Gradient Backgrounds */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-trust {
+    background: var(--gradient-trust);
+  }
+
+  .gradient-subtle {
+    background: var(--gradient-subtle);
+  }
+
+  /* Professional Shadows */
+  .shadow-compliance {
+    box-shadow: var(--shadow-compliance);
+  }
+
+  /* Financial Status Indicators */
+  .status-positive {
+    @apply text-success;
+  }
+
+  .status-negative {
+    @apply text-destructive;
+  }
+
+  .status-neutral {
+    @apply text-muted-foreground;
+  }
+
+  /* Text clamping utilities */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+
