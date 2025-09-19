@@ -62,12 +62,18 @@ def create_app() -> FastAPI:
     
     # Middleware
     if settings.enable_cors:
+        # More permissive CORS for development
+        allow_origins = settings.cors_origins_list
+        if settings.is_development:
+            allow_origins.append("*")  # Allow all origins in development
+            
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=settings.cors_origins_list,
+            allow_origins=allow_origins if not settings.is_development else ["*"],
             allow_credentials=True,
-            allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+            allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
             allow_headers=["*"],
+            expose_headers=["*"],
         )
     
     if settings.is_production:

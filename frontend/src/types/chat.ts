@@ -22,11 +22,17 @@ export interface Thread {
   id: string;
   title: string;
   customGPTId: string;
-  createdAt: string;
-  updatedAt: string;
+  custom_gpt_id: string; // Backend uses snake_case
+  created_at: string;
+  updated_at: string;
+  createdAt: string; // Keep for compatibility
+  updatedAt: string; // Keep for compatibility
   lastMessage?: string;
+  last_message?: string; // Backend uses snake_case
   messageCount: number;
+  message_count: number; // Backend uses snake_case
   isArchived: boolean;
+  is_archived: boolean; // Backend uses snake_case
   tags?: string[];
 }
 
@@ -35,8 +41,10 @@ export interface Message {
   threadId: string;
   content: string;
   role: 'user' | 'assistant';
-  timestamp: string;
+  created_at: string;
+  updated_at: string;
   customGPTId?: string;
+  custom_gpt_id?: string; // Backend uses snake_case
   attachments?: FileAttachment[];
   mcpToolInteractions?: MCPToolInteraction[];
   complianceFlags?: string[];

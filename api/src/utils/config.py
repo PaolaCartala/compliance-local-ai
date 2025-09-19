@@ -98,7 +98,7 @@ class Settings(BaseSettings):
     
     # Development
     enable_cors: bool = Field(default=True, env="ENABLE_CORS")
-    cors_origins: str = Field(default="http://localhost:3000,http://localhost:5173", env="CORS_ORIGINS")
+    cors_origins: str = Field(default="http://localhost:8080,http://192.168.3.5:8080", env="CORS_ORIGINS")
     
     class Config:
         env_file = ".env"

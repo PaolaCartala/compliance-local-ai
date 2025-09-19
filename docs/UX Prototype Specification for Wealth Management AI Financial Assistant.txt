@@ -1,0 +1,247 @@
+# Converted from: UX Prototype Specification for Wealth Management AI Financial Assistant.docx
+# Conversion date: 1758205044.9399855
+
+ Add icon	 Add cover
+UX Prototype Specification for Wealth Management AI Financial Assistant
+UX Prototype Specification for Wealth Management AI Financial Assistant
+Lovable.dev Agent Prompt - SEC Compliance Focus
+Project Title: SEC-Compliant AI Financial Assistant for Wealth Management Target Platform: Web Application (TypeScript/Vite/React) Primary Users: Financial planners, advisors, and compliance officers at wealth management firm
+Project Overview
+Create a modern, professional web application prototype for a wealth management firm's SEC-compliant AI Financial Assistant. This system focuses primarily on SEC-compliant note translation from meeting recordings/transcripts, seamlessly integrates with existing CRM and portfolio platforms (Redtail CRM, Albridge), and maintains rigorous security and audit trail requirements for financial advisory compliance.
+Core Business Requirements (Meeting Agenda Alignment)
+Primary Function: SEC-Compliant Note Translation
+Input: Raw meeting notes (audio recordings from iPhone or transcribed text) Output: Professional, SEC-compliant meeting summaries including:
+Client identity and meeting date
+Topics discussed (goals, risk tolerance, life events)
+Specific recommendations or advice given
+Action items for client and firm
+Tamper-proof audit trail for regulatory compliance
+Secondary Functions: CRM & Portfolio Integration
+Redtail CRM: Bidirectional integration for client data and note logging
+Albridge: Portfolio data analysis and recommendations
+Black Diamond: Future integration planning (phased approach)
+Compliance & Security Focus
+Data encryption and access control
+Complete audit trails for all AI interactions
+Human oversight and review workflows
+Data minimization (exclude SSNs and other sensitive data)
+User Personas & Roles
+Financial Planner (Primary User)
+Core function: Client meetings and relationship management
+Needs: Quick note translation, CRM integration, compliance assurance
+UI Focus: Meeting note processing, client context, compliance verification Compliance Officer (Critical Reviewer)
+Core function: Regulatory oversight and audit preparation
+Needs: Audit trail access, note review workflows, SEC compliance verification
+UI Focus: Compliance dashboard, review queues, audit reports Technology Team Lead (System Administrator)
+Core function: System maintenance and security oversight
+Needs: Security monitoring, integration status, system health
+UI Focus: Admin dashboard, security logs, integration management
+Core Application Features
+SEC-Compliant Note Processing Interface
+Compliance-Focused Results Display
+CRM Integration Dashboard
+Python
+Redtail CRM Integration:
+- Client search and selection
+- Automatic data population from CRM
+- Direct note posting to client records
+- Activity logging and follow-up scheduling
+Compliance Review Workflow
+Security & Audit Dashboard
+Technical Requirements
+Technology Stack
+Framework: React 18+ with TypeScript
+Build Tool: Vite
+Styling: Tailwind CSS with professional financial compliance theme
+State Management: React Query + Zustand
+Security: End-to-end encryption simulation
+Audit Logging: Immutable log display components
+Forms: React Hook Form with strict validation
+Compliance-Focused Design
+Audit Trail: Visible timestamps and user attribution on all actions
+Data Minimization: Clear indicators of what data is/isn't processed
+Human Oversight: Required approval workflows for all AI outputs
+Error Handling: Clear escalation paths and manual override options
+Mocked Data Specifications
+SEC-Compliant Meeting Notes Mock
+TypeScript
+1 const mockMeetingNoteResult = {
+2	id: "note_001",
+client_information: {
+name: "Robert J. Smith",
+account_number: "RTS-789456123",
+meeting_date: "2025-09-10",
+meeting_type: "Quarterly Review",
+advisor: "Sarah Johnson, CFP"
+9	},
+10	discussion_topics: [
+11	{
+category: "Financial Goals Review",
+content: "Client confirmed retirement goal remains age 65 (15 years). Discussed increasing
+regulatory_notes: "Goal reconfirmation documented per Investment Advisors Act requirements"
+15	},
+16	{
+category: "Risk Tolerance Assessment",
+content: "Client maintains moderate risk tolerance. Recent market volatility has not change
+regulatory_notes: "Risk tolerance reassessment completed per firm policy"
+20	},
+21	{
+category: "Life Events",
+content: "Client mentioned daughter's college enrollment next year. Estimated additional ex
+regulatory_notes: "Material life event documented affecting financial planning recommendati
+25	}
+26	],
+27	recommendations_given: [
+28	{
+recommendation: "Increase 401(k) contribution from $15,000 to maximum $23,000 annually",
+rationale: "Recent salary increase provides capacity, maximizes tax-deferred growth opportu
+implementation: "Client to contact HR to adjust payroll deduction beginning next pay period
+regulatory_basis: "Recommendation based on client's stated retirement timeline and risk tol
+33	},
+34	{
+recommendation: "Establish additional 529 education savings plan with $5,000 initial fundin
+rationale: "Tax-advantaged college savings for daughter's education expenses",
+implementation: "Firm to prepare 529 application for client signature within 5 business day
+regulatory_basis: "Education planning recommendation based on disclosed life event"
+39	}
+40	],
+action_items: {
+client_responsibilities: [
+"Contact HR to increase 401(k) contribution by October 1, 2025",
+"Provide daughter's school information for 529 plan setup",
+"Review and sign 529 plan application within 7 days"
+46	],
+firm_responsibilities: [
+"Prepare 529 education savings plan application by September 15, 2025",
+"Schedule follow-up call in 30 days to confirm 401(k) increase implementation",
+"Update client profile with new contribution levels and education expense timeline"
+51	]
+52	},
+compliance_verification: {
+sec_requirements_met: true,
+fiduciary_standard_applied: true,
+suitability_documented: true,
+conflicts_of_interest: "None disclosed",
+fee_disclosure_current: true
+59	},
+audit_trail: {
+original_audio_duration: "47 minutes, 23 seconds",
+ai_processing_time: "2 minutes, 15 seconds",
+ai_confidence_score: 96,
+human_reviewer: "Jennifer Walsh, CCO",
+review_date: "2025-09-10T16:45:00Z",
+approval_status: "approved",
+regulatory_retention_date: "2031-09-10"
+68	}
+69 };
+70
+CRM Integration Mock Data
+TypeScript
+C	C
+const mockCRMIntegration = {
+client_profile: {
+redtail_id: "RT_12345",
+name: "Robert J. Smith",
+date_of_birth: "1975-03-15",
+account_opening_date: "2018-06-12",
+primary_advisor: "Sarah Johnson, CFP",
+relationship_type: "Individual Advisory",
+assets_under_management: "$847,392.18",
+last_annual_review: "2024-09-15",
+next_scheduled_review: "2025-09-15",
+risk_tolerance: "Moderate",
+investment_objective: "Long-term Growth"
+14	},
+15	recent_activities: [
+16	{
+17	date: "2025-08-28",
+type: "Phone Call",
+summary: "Discussed market volatility concerns, reassured client of long-term strategy",
+advisor: "Sarah Johnson"
+21	},
+22	{
+23	date: "2025-07-15",
+type: "Document Review",
+summary: "Client signed updated investment policy statement",
+advisor: "Sarah Johnson"
+27	}
+28	]
+29 };
+30
+const mockPortfolioData = {
+albridge_account: "ALB_789456123",
+as_of_date: "2025-08-31",
+total_portfolio_value: "$847,392.18",
+asset_allocation: {
+"US Large Cap Equity": "35.2%",
+"US Small Cap Equity": "12.8%",
+"International Developed Equity": "15.7%",
+"Emerging Markets Equity": "6.3%",
+"Investment Grade Bonds": "22.4%",
+"High Yield Bonds": "4.2%",
+"Cash & Money Market": "3.4%"
+43	},
+performance_summary: {
+"Quarter-to-Date": "2.7%",
+"Year-to-Date": "8.4%",
+"1-Year": "12.1%",
+"3-Year Annualized": "7.9%",
+"Since Inception": "9.2%"
+50	},
+ai_analysis: {
+observations: [
+"Portfolio allocation closely aligns with moderate risk profile",
+"Performance tracking above target benchmark by 1.3% year-to-date",
+"Cash position appropriate for current market conditions"
+56	],
+recommendations: [
+"Consider small rebalancing to target allocation (equity slightly overweight)",
+"Maintain current allocation given strong relative performance",
+"Monitor international exposure given recent currency fluctuations"
+61	]
+62	}
+63 };
+64
+Compliance Dashboard Mock Data
+UI/UX Design Requirements
+Design System - Financial Compliance Theme
+Navigation Structure
+Key User Flows
+Primary Flow: Meeting Note Processing
+Upload audio file from iPhone or paste transcript
+Select client from Redtail CRM integration
+Choose note template (quarterly review, annual review, etc.)
+AI processes and generates SEC-compliant formatted notes
+System flags for human review with confidence score
+Compliance officer reviews, edits if needed, approves
+Approved notes automatically posted to Redtail CRM
+Complete audit trail documented for regulatory compliance Secondary Flow: Portfolio Analysis Integration
+From approved meeting notes, trigger portfolio analysis
+System retrieves current Albridge portfolio data
+AI analyzes portfolio against meeting discussion and recommendations
+Generate portfolio-specific recommendations and compliance documentation
+Results integrated into meeting notes and CRM record
+Future Black Diamond integration preparation shown in preview mode
+Implementation Notes
+Security & Compliance Features
+Human Oversight Workflow
+Success Criteria
+SEC Compliance Goals:
+ All AI-generated notes include required regulatory elements
+ Complete audit trail for every processed document
+ Human review workflow prevents unsupervised AI outputs
+ Data minimization clearly demonstrated (no SSNs processed)
+ Tamper-proof audit trail with immutable timestamps
+User Experience Goals:
+ Streamlined note processing reduces administrative time by 60%+
+ Seamless CRM integration eliminates double data entry
+ Clear compliance status indicators throughout interface
+ Professional design appropriate for client-facing environments
+ Mobile-responsive for iPhone audio upload workflow
+Technical Implementation:
+ Mock all integrations with realistic financial advisory data
+ Demonstrate complete compliance review workflow
+ Show security features and audit capabilities
+ Include error handling and escalation paths
+ Future Black Diamond integration planning interface
+Build a comprehensive prototype that demonstrates how AI can enhance wealth management compliance and efficiency while maintaining the rigorous oversight and documentation standards required in financial advisory services.

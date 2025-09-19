@@ -78,7 +78,7 @@ class QueueService:
                 
                 # Parse JSON fields safely
                 try:
-                    request_data = json.loads(request["request_data"]) if request["request_data"] else {}
+                    request_data = json.loads(request["input_data"]) if request["input_data"] else {}
                 except (json.JSONDecodeError, TypeError):
                     request_data = {}
                 
@@ -91,7 +91,8 @@ class QueueService:
                     "user_id": request["user_id"],
                     "priority": request["priority"],
                     "created_at": request["created_at"],
-                    **request_data  # Unpack the request_data JSON
+                    "input_data": request["input_data"],  # Keep original JSON field
+                    **request_data  # Unpack the request_data JSON for individual fields
                 }
                 
                 log_queue_operation(

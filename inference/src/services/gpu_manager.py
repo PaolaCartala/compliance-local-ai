@@ -86,10 +86,11 @@ class GPUResourceManager:
                 
                 # Log performance metrics
                 log_performance_metric(
-                    operation="gpu_resource_acquired",
-                    duration_ms=wait_time_ms,
-                    metadata={
-                        "request_id": request_id,
+                    metric_type="gpu_resource_acquired",
+                    value=wait_time_ms,
+                    unit="ms",
+                    request_id=request_id,
+                    context={
                         "timeout_seconds": timeout,
                         "total_acquisitions": self._total_acquisitions,
                         "average_wait_time_ms": self._total_wait_time_ms // max(1, self._total_acquisitions)
@@ -167,10 +168,11 @@ class GPUResourceManager:
         
         # Log performance metrics
         log_performance_metric(
-            operation="gpu_resource_released",
-            duration_ms=usage_time_ms,
-            metadata={
-                "request_id": request_id,
+            metric_type="gpu_resource_released",
+            value=usage_time_ms,
+            unit="ms",
+            request_id=request_id,
+            context={
                 "usage_time_ms": usage_time_ms,
                 "total_acquisitions": self._total_acquisitions
             }

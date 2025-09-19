@@ -72,31 +72,47 @@ export function ThreadSidebar({
   const [filterSpecialization, setFilterSpecialization] = useState<string>('all');
 
   const getCustomGPTForThread = (thread: Thread) => {
-    return customGPTs.find(gpt => gpt.id === thread.customGPTId);
+    return customGPTs.find(gpt => gpt.id === (thread.customGPTId || thread.custom_gpt_id));
   };
 
   const filteredThreads = threads.filter(thread => {
+    const lastMessage = thread.lastMessage || thread.last_message;
     const matchesSearch = thread.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      thread.lastMessage?.toLowerCase().includes(searchQuery.toLowerCase());
+      lastMessage?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const customGPT = getCustomGPTForThread(thread);
     const matchesFilter = filterSpecialization === 'all' || 
       customGPT?.specialization === filterSpecialization;
     
-    return matchesSearch && matchesFilter && !thread.isArchived;
+    const isArchived = thread.isArchived || thread.is_archived;
+    return matchesSearch && matchesFilter && !isArchived;
   });
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-    
-    if (diffInHours < 24) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    } else if (diffInHours < 48) {
-      return 'Yesterday';
-    } else {
-      return date.toLocaleDateString();
+    try {
+      if (!dateString) return '';
+      
+      // Handle both formats: "2025-09-18T18:43:51" and "2025-09-18T18:43:26.600705"
+      const date = new Date(dateString);
+      
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date string:', dateString);
+        return '';
+      }
+      
+      const now = new Date();
+      const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+      
+      if (diffInHours < 24) {
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } else if (diffInHours < 48) {
+        return 'Yesterday';
+      } else {
+        return date.toLocaleDateString();
+      }
+    } catch (error) {
+      console.error('Error formatting date:', error, 'dateString:', dateString);
+      return '';
     }
   };
 
@@ -201,16 +217,16 @@ export function ThreadSidebar({
                       </h4>
 
                       {/* Last message preview */}
-                      {thread.lastMessage && (
+                      {(thread.lastMessage || thread.last_message) && (
                         <p className="text-xs text-muted-foreground mb-2 break-words leading-tight line-clamp-2">
-                          {thread.lastMessage}
+                          {thread.lastMessage || thread.last_message}
                         </p>
                       )}
 
                       {/* Footer info */}
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{thread.messageCount} messages</span>
-                        <span>{formatDate(thread.updatedAt)}</span>
+                        <span>{thread.messageCount || thread.message_count || 0} messages</span>
+                        <span>{formatDate(thread.updatedAt || thread.updated_at)}</span>
                       </div>
                     </div>
 

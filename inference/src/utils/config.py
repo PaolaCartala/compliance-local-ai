@@ -16,8 +16,8 @@ from pydantic_settings import BaseSettings
 class OllamaSettings(BaseModel):
     """Ollama model configuration."""
     base_url: str = Field(
-        default="http://localhost:11434",
-        description="Ollama service base URL"
+        default="http://localhost:11434/v1",
+        description="Ollama service base URL with OpenAI-compatible API endpoint"
     )
     chat_model: str = Field(
         default="gpt-oss",
@@ -209,7 +209,7 @@ class InferenceSettings(BaseSettings):
     def from_env(cls) -> "InferenceSettings":
         """Load settings from environment variables."""
         return cls(
-            ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+            ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
             chat_model=os.getenv("CHAT_MODEL", "gpt-oss:latest"),
             vision_model=os.getenv("VISION_MODEL", "llama3.2-vision:11b"),
             database_path=os.getenv("DATABASE_PATH", "../api/database/baker_compliant_ai.db"),

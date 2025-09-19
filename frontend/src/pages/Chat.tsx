@@ -5,10 +5,16 @@ import { ThreadSidebar } from '@/components/chat/ThreadSidebar';
 import { ConversationWindow } from '@/components/chat/ConversationWindow';
 import { CustomGPTModal } from '@/components/chat/CustomGPTModal';
 import { 
-  mockCustomGPTs as initialCustomGPTs, 
-  mockThreads as initialThreads, 
-  mockMessages as initialMessages 
-} from '@/data/mockChatData';
+  useThreads, 
+  useCustomGPTs, 
+  useCreateThread, 
+  useSendMessage,
+  useUpdateThread,
+  useDeleteThread,
+  useCreateCustomGPT,
+  useUpdateCustomGPT,
+  useThreadMessages
+} from '@/hooks/useAPI';
 import { CustomGPT, Thread, Message } from '@/types/chat';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -22,42 +28,111 @@ import {
 export default function Chat() {
   const { toast } = useToast();
   
-  // State management
-  const [customGPTs, setCustomGPTs] = useState<CustomGPT[]>(initialCustomGPTs);
-  const [threads, setThreads] = useState<Thread[]>(initialThreads);
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  // Local state
   const [selectedThreadId, setSelectedThreadId] = useState<string>();
-  const [selectedCustomGPTId, setSelectedCustomGPTId] = useState<string>(customGPTs[0]?.id || '');
+  const [selectedCustomGPTId, setSelectedCustomGPTId] = useState<string>('');
+  const [isAIThinking, setIsAIThinking] = useState(false);
+  const [lastAssistantMessageCount, setLastAssistantMessageCount] = useState(0);
   
   // Modal states
   const [customGPTModalOpen, setCustomGPTModalOpen] = useState(false);
   const [customGPTModalMode, setCustomGPTModalMode] = useState<'create' | 'edit'>('create');
   const [editingCustomGPT, setEditingCustomGPT] = useState<CustomGPT>();
 
+  // API hooks for data fetching
+  const { data: threadsData, isLoading: threadsLoading } = useThreads();
+  const { data: customGPTsData, isLoading: customGPTsLoading } = useCustomGPTs();
+  const { data: threadMessagesData, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
+  
+  // Mutations for API operations
+  const createThreadMutation = useCreateThread();
+  const sendMessageMutation = useSendMessage();
+  const updateThreadMutation = useUpdateThread();
+  const deleteThreadMutation = useDeleteThread();
+  const createCustomGPTMutation = useCreateCustomGPT();
+  const updateCustomGPTMutation = useUpdateCustomGPT();
+
+  // Extract data from API responses
+  const threads = threadsData?.items || [];
+  const customGPTs = customGPTsData?.items || [];
+  
+  // Set default Custom GPT when data loads
+  React.useEffect(() => {
+    if (customGPTs.length > 0 && !selectedCustomGPTId) {
+      setSelectedCustomGPTId(customGPTs[0].id);
+    }
+  }, [customGPTs, selectedCustomGPTId]);
+
   // Get current thread and its messages
   const currentThread = threads.find(t => t.id === selectedThreadId);
-  const threadMessages = selectedThreadId 
-    ? messages.filter(m => m.threadId === selectedThreadId)
-    : [];
+  // Sort messages by creation date (oldest first) for proper chat display
+  const threadMessages: Message[] = React.useMemo(() => {
+    const messages = threadMessagesData?.items || [];
+    return [...messages].sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      return dateA.getTime() - dateB.getTime();
+    });
+  }, [threadMessagesData?.items]);
+
+  // Count assistant messages to detect new AI responses
+  const assistantMessageCount = React.useMemo(() => {
+    return threadMessages.filter(msg => msg.role === 'assistant').length;
+  }, [threadMessages]);
+
+  // Monitor for new assistant messages to stop thinking indicator
+  React.useEffect(() => {
+    console.log('Chat Debug - Assistant message count changed:', assistantMessageCount, 'Previous:', lastAssistantMessageCount);
+    
+    if (isAIThinking && assistantMessageCount > lastAssistantMessageCount) {
+      console.log('Chat Debug - New AI response detected, stopping thinking indicator');
+      setIsAIThinking(false);
+      setLastAssistantMessageCount(assistantMessageCount);
+    }
+  }, [assistantMessageCount, isAIThinking, lastAssistantMessageCount]);
+
+  // Reset thinking state when changing threads
+  React.useEffect(() => {
+    console.log('Chat Debug - Thread changed, resetting thinking state');
+    setIsAIThinking(false);
+    setLastAssistantMessageCount(assistantMessageCount);
+  }, [selectedThreadId, assistantMessageCount]);
+  
+  // Debug logging
+  React.useEffect(() => {
+    console.log('Chat Debug - Selected thread ID:', selectedThreadId);
+    console.log('Chat Debug - Thread messages data:', threadMessagesData);
+    console.log('Chat Debug - Thread messages count:', threadMessages.length);
+    console.log('Chat Debug - Assistant message count:', assistantMessageCount);
+    console.log('Chat Debug - Last assistant message count:', lastAssistantMessageCount);
+    console.log('Chat Debug - Messages loading:', messagesLoading);
+    console.log('Chat Debug - isAIThinking:', isAIThinking);
+    if (threadMessages.length > 0) {
+      console.log('Chat Debug - First message:', threadMessages[0]);
+      console.log('Chat Debug - Last message:', threadMessages[threadMessages.length - 1]);
+    }
+  }, [selectedThreadId, threadMessagesData, threadMessages, messagesLoading, isAIThinking, assistantMessageCount, lastAssistantMessageCount]);
 
   // Thread management
   const handleNewThread = () => {
-    const newThread: Thread = {
-      id: `thread_${Date.now()}`,
-      title: `New Conversation - ${new Date().toLocaleDateString()}`,
-      customGPTId: selectedCustomGPTId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      messageCount: 0,
-      isArchived: false
-    };
+    if (!selectedCustomGPTId) {
+      toast({
+        title: "Error",
+        description: "Please select a Custom GPT first.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setThreads(prev => [newThread, ...prev]);
-    setSelectedThreadId(newThread.id);
+    const title = `New Conversation - ${new Date().toLocaleDateString()}`;
     
-    toast({
-      title: "New Thread Created",
-      description: "Start your conversation with the selected CustomGPT."
+    createThreadMutation.mutate({
+      title,
+      customGptId: selectedCustomGPTId,
+    }, {
+      onSuccess: (response) => {
+        setSelectedThreadId(response.data.id);
+      },
     });
   };
 
@@ -65,127 +140,67 @@ export default function Chat() {
     setSelectedThreadId(threadId);
     const thread = threads.find(t => t.id === threadId);
     if (thread) {
-      setSelectedCustomGPTId(thread.customGPTId);
+      setSelectedCustomGPTId(thread.custom_gpt_id || thread.customGPTId);
     }
   };
 
   const handleEditThread = (threadId: string) => {
-    // In a real app, this would open a rename dialog
     const newTitle = prompt("Enter new thread title:");
     if (newTitle) {
-      setThreads(prev => prev.map(t => 
-        t.id === threadId 
-          ? { ...t, title: newTitle, updatedAt: new Date().toISOString() }
-          : t
-      ));
-      toast({
-        title: "Thread Renamed",
-        description: "Thread title updated successfully."
+      updateThreadMutation.mutate({
+        threadId,
+        updates: { title: newTitle },
       });
     }
   };
 
   const handleArchiveThread = (threadId: string) => {
-    setThreads(prev => prev.map(t => 
-      t.id === threadId 
-        ? { ...t, isArchived: true, updatedAt: new Date().toISOString() }
-        : t
-    ));
-    
-    if (selectedThreadId === threadId) {
-      setSelectedThreadId(undefined);
-    }
-    
-    toast({
-      title: "Thread Archived",
-      description: "Thread moved to archives."
+    updateThreadMutation.mutate({
+      threadId,
+      updates: { is_archived: true },
+    }, {
+      onSuccess: () => {
+        if (selectedThreadId === threadId) {
+          setSelectedThreadId(undefined);
+        }
+      },
     });
   };
 
   const handleDeleteThread = (threadId: string) => {
     if (confirm("Are you sure you want to delete this thread? This action cannot be undone.")) {
-      setThreads(prev => prev.filter(t => t.id !== threadId));
-      setMessages(prev => prev.filter(m => m.threadId !== threadId));
-      
-      if (selectedThreadId === threadId) {
-        setSelectedThreadId(undefined);
-      }
-      
-      toast({
-        title: "Thread Deleted",
-        description: "Thread and all messages have been permanently deleted.",
-        variant: "destructive"
+      deleteThreadMutation.mutate(threadId, {
+        onSuccess: () => {
+          if (selectedThreadId === threadId) {
+            setSelectedThreadId(undefined);
+          }
+        },
       });
     }
   };
 
   // Message handling
   const handleSendMessage = (content: string, attachments?: File[]) => {
-    if (!selectedThreadId) return;
+    if (!selectedThreadId) {
+      toast({
+        title: "Error",
+        description: "Please select or create a thread first.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // User message
-    const userMessage: Message = {
-      id: `msg_${Date.now()}_user`,
-      threadId: selectedThreadId,
+    console.log('Chat Debug - Sending message, starting thinking indicator');
+    console.log('Chat Debug - Current assistant message count:', assistantMessageCount);
+    setIsAIThinking(true);
+    setLastAssistantMessageCount(assistantMessageCount); // Set baseline count before sending
+
+    sendMessageMutation.mutate({
       content,
-      role: 'user',
-      timestamp: new Date().toISOString(),
-      attachments: attachments?.map(file => ({
-        id: `file_${Date.now()}_${file.name}`,
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        url: URL.createObjectURL(file),
-        uploadedAt: new Date().toISOString()
-      }))
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-
-    // Update thread
-    setThreads(prev => prev.map(t => 
-      t.id === selectedThreadId 
-        ? { 
-            ...t, 
-            messageCount: t.messageCount + 1,
-            lastMessage: content.substring(0, 100) + (content.length > 100 ? '...' : ''),
-            updatedAt: new Date().toISOString() 
-          }
-        : t
-    ));
-
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: `msg_${Date.now()}_ai`,
-        threadId: selectedThreadId,
-        content: generateMockAIResponse(content, selectedCustomGPTId),
-        role: 'assistant',
-        timestamp: new Date().toISOString(),
-        customGPTId: selectedCustomGPTId,
-        mcpToolInteractions: Math.random() > 0.5 ? [
-          {
-            toolName: 'redtail-crm',
-            action: 'fetch_client_data',
-            data: { query: content },
-            timestamp: new Date().toISOString(),
-            success: true
-          }
-        ] : undefined
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-      setThreads(prev => prev.map(t => 
-        t.id === selectedThreadId 
-          ? { 
-              ...t, 
-              messageCount: t.messageCount + 1,
-              lastMessage: aiMessage.content.substring(0, 100) + (aiMessage.content.length > 100 ? '...' : ''),
-              updatedAt: new Date().toISOString() 
-            }
-          : t
-      ));
-    }, 1500);
+      threadId: selectedThreadId,
+      customGptId: selectedCustomGPTId,
+      files: attachments,
+    });
   };
 
   // CustomGPT management
@@ -203,28 +218,38 @@ export default function Chat() {
 
   const handleSaveCustomGPT = (customGPT: CustomGPT) => {
     if (customGPTModalMode === 'create') {
-      setCustomGPTs(prev => [...prev, customGPT]);
-      setSelectedCustomGPTId(customGPT.id);
+      createCustomGPTMutation.mutate({
+        name: customGPT.name,
+        description: customGPT.description,
+        system_prompt: customGPT.systemPrompt,
+        specialization: customGPT.specialization,
+        color: customGPT.color,
+        icon: customGPT.icon,
+        mcp_tools_enabled: customGPT.mcpToolsEnabled,
+      }, {
+        onSuccess: () => {
+          setSelectedCustomGPTId(customGPT.id);
+          setCustomGPTModalOpen(false);
+        },
+      });
     } else {
-      setCustomGPTs(prev => prev.map(gpt => 
-        gpt.id === customGPT.id ? customGPT : gpt
-      ));
+      updateCustomGPTMutation.mutate({
+        customGptId: customGPT.id,
+        updates: {
+          name: customGPT.name,
+          description: customGPT.description,
+          system_prompt: customGPT.systemPrompt,
+          specialization: customGPT.specialization,
+          color: customGPT.color,
+          icon: customGPT.icon,
+          mcp_tools_enabled: customGPT.mcpToolsEnabled,
+        },
+      }, {
+        onSuccess: () => {
+          setCustomGPTModalOpen(false);
+        },
+      });
     }
-  };
-
-  // Mock AI response generator
-  const generateMockAIResponse = (userMessage: string, customGPTId: string): string => {
-    const customGPT = customGPTs.find(gpt => gpt.id === customGPTId);
-    const responses = {
-      crm: "I've accessed the client's profile from Redtail CRM. Based on their interaction history, I can see they last contacted us on...",
-      portfolio: "I've analyzed the portfolio data from Albridge. The current allocation shows... I recommend the following adjustments:",
-      compliance: "I've reviewed this request for SEC compliance. All recommendations align with regulatory requirements. Documentation has been updated in the audit trail.",
-      general: "Based on my comprehensive analysis incorporating both CRM data and portfolio information, here's my recommendation...",
-      retirement: "For retirement planning, I've calculated the optimal contribution strategy based on current tax brackets and projected retirement needs...",
-      tax: "From a tax efficiency perspective, I recommend the following strategies to minimize your tax liability while maximizing long-term growth..."
-    };
-
-    return responses[customGPT?.specialization || 'general'] || "I understand your request. Let me analyze this information and provide you with a comprehensive response...";
   };
 
   return (
@@ -284,6 +309,7 @@ export default function Chat() {
           messages={threadMessages}
           customGPTs={customGPTs}
           selectedCustomGPTId={selectedCustomGPTId}
+          isAIThinking={isAIThinking}
           onCustomGPTChange={setSelectedCustomGPTId}
           onSendMessage={handleSendMessage}
         />

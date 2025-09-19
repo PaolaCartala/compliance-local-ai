@@ -81,8 +81,16 @@ async def get_user_threads(
 ):
     """Get all threads for the current user."""
     try:
+        # Map auth user to database user ID
+        db_user_id = await get_database_user_id(current_user)
+        if not db_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found in database"
+            )
+            
         threads, total = await chat_service.get_user_threads(
-            db, user_id=current_user["id"], offset=offset, limit=limit
+            db, user_id=str(db_user_id), offset=offset, limit=limit
         )
         
         page = (offset // limit) + 1
@@ -100,7 +108,7 @@ async def get_user_threads(
         logger.error(
             "Failed to get user threads",
             error=str(e),
-            user_id=current_user["id"],
+            user_id=str(db_user_id) if 'db_user_id' in locals() else current_user.get("id", "unknown"),
             exc_info=True
         )
         raise HTTPException(
@@ -121,6 +129,14 @@ async def get_thread(
 ):
     """Get a specific thread by ID."""
     try:
+        # Map auth user to database user ID
+        db_user_id = await get_database_user_id(current_user)
+        if not db_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found in database"
+            )
+            
         thread = await chat_service.get_thread_by_id(db, thread_id)
         
         if not thread:
@@ -130,7 +146,7 @@ async def get_thread(
             )
         
         # Verify user owns this thread
-        if thread.user_id != current_user["id"]:
+        if thread.user_id != str(db_user_id):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Access denied: You don't own this thread"
@@ -149,7 +165,7 @@ async def get_thread(
             "Failed to get thread",
             error=str(e),
             thread_id=thread_id,
-            user_id=current_user["id"],
+            user_id=str(db_user_id) if 'db_user_id' in locals() else current_user.get("id", "unknown"),
             exc_info=True
         )
         raise HTTPException(
@@ -171,11 +187,19 @@ async def update_thread(
 ):
     """Update a specific thread by ID."""
     try:
+        # Map auth user to database user ID
+        db_user_id = await get_database_user_id(current_user)
+        if not db_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found in database"
+            )
+            
         updated_thread = await chat_service.update_thread(
             db=db,
             thread_id=thread_id,
             thread_data=thread_data,
-            user_id=current_user["id"]
+            user_id=str(db_user_id)
         )
         
         if not updated_thread:
@@ -197,10 +221,61 @@ async def update_thread(
             "Failed to update thread",
             error=str(e),
             thread_id=thread_id,
-            user_id=current_user["id"],
+            user_id=str(db_user_id) if 'db_user_id' in locals() else current_user.get("id", "unknown"),
             exc_info=True
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update thread"
+        )
+
+
+@router.delete(
+    "/{thread_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a specific thread"
+)
+async def delete_thread(
+    thread_id: str,
+    db: AsyncSession = Depends(get_database_session),
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete a specific thread by ID."""
+    try:
+        # Map auth user to database user ID
+        db_user_id = await get_database_user_id(current_user)
+        if not db_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found in database"
+            )
+            
+        deleted = await chat_service.delete_thread(
+            db=db,
+            thread_id=thread_id,
+            user_id=str(db_user_id)
+        )
+        
+        if not deleted:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Thread with ID {thread_id} not found or access denied"
+            )
+        
+        # 204 No Content - successful deletion
+        return
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(
+            "Failed to delete thread",
+            error=str(e),
+            thread_id=thread_id,
+            user_id=str(db_user_id) if 'db_user_id' in locals() else current_user.get("id", "unknown"),
+            exc_info=True
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete thread"
         )

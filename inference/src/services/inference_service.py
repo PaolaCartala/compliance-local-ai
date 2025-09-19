@@ -216,7 +216,10 @@ class InferenceService:
                 logger.debug("No requests in queue")
                 return
             
-            request_id = request["id"]
+            # Debug logging to see what's in the request
+            logger.debug("Request received", request_keys=list(request.keys()) if request else "None", request_content=request)
+            
+            request_id = request["request_id"]
             request_type = request["request_type"]
             retry_count = request.get("retry_count", 0)
             max_retries = self.settings.service.max_queue_retries
@@ -225,7 +228,7 @@ class InferenceService:
                 "Processing inference request",
                 request_id=request_id,
                 request_type=request_type,
-                user_priority=request["user_priority"],
+                priority=request["priority"],
                 retry_count=retry_count,
                 max_retries=max_retries
             )
@@ -238,8 +241,7 @@ class InferenceService:
                 compliance_status="COMPLIANT",
                 details={
                     "request_type": request_type,
-                    "user_role": request["user_role"],
-                    "user_priority": request["user_priority"],
+                    "priority": request["priority"],
                     "retry_count": retry_count
                 }
             )
@@ -307,7 +309,7 @@ class InferenceService:
                     "request_type": request_type,
                     "success": result.get("success", False),
                     "retry_count": retry_count,
-                    "user_priority": request["user_priority"]
+                    "priority": request["priority"]
                 }
             )
             
@@ -319,7 +321,7 @@ class InferenceService:
             await self.queue_service.complete_request(
                 request_id,
                 success=result.get("success", False),
-                result_data=result.get("data"),
+                response_data=result.get("data", {}),
                 error_message=result.get("error")
             )
             
@@ -331,8 +333,7 @@ class InferenceService:
                 compliance_status="COMPLIANT" if result.get("success", False) else "NON_COMPLIANT",
                 details={
                     "request_type": request_type,
-                    "user_role": request["user_role"],
-                    "user_priority": request["user_priority"],
+                    "priority": request["priority"],
                     "success": result.get("success", False),
                     "processing_time_ms": total_processing_time_ms,
                     "retry_count": retry_count
@@ -362,11 +363,35 @@ class InferenceService:
     
     async def _process_chat_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process a chat/analysis request using the chat agent."""
-        request_id = request["id"]
+        request_id = request["request_id"]
         
         try:
-            # Extract request data
-            request_data = json.loads(request["request_data"])
+            # Extract request data with error handling
+            if "input_data" not in request:
+                logger.error("Missing input_data field in request", request_id=request_id, request_keys=list(request.keys()))
+                return {
+                    "success": False,
+                    "error": "Missing input_data field in request",
+                    "processing_time_ms": 0
+                }
+            
+            if not request["input_data"]:
+                logger.error("Empty input_data field in request", request_id=request_id)
+                return {
+                    "success": False,
+                    "error": "Empty input_data field in request", 
+                    "processing_time_ms": 0
+                }
+            
+            try:
+                request_data = json.loads(request["input_data"])
+            except json.JSONDecodeError as e:
+                logger.error("Invalid JSON in input_data", request_id=request_id, error=str(e), input_data=request["input_data"])
+                return {
+                    "success": False,
+                    "error": f"Invalid JSON in input_data: {str(e)}",
+                    "processing_time_ms": 0
+                }
             
             # Get GPU resource for processing
             async with self._gpu_resource() as gpu_acquired:
@@ -380,17 +405,125 @@ class InferenceService:
                 # Process with chat agent
                 start_time = datetime.utcnow()
                 
-                result = await self.chat_agent.process_request(
-                    request_data=request_data,
-                    user_context={
-                        "user_id": request["user_id"],
-                        "user_role": request["user_role"],
-                        "request_id": request_id
-                    }
+                # Extract required fields from request_data
+                message_id = request_data.get("message_id", request["message_id"])
+                custom_gpt_id = request_data.get("custom_gpt_id", request.get("custom_gpt_id"))
+                user_message = request_data.get("user_message", "")
+                context_messages = request_data.get("context_messages", [])
+                attachments = request_data.get("attachments", [])
+                
+                # For now, create a minimal custom_gpt config - this should come from DB in the future
+                custom_gpt = {
+                    "id": custom_gpt_id,
+                    "user_id": request["user_id"],  # Include user_id from request
+                    "specialization": "general",
+                    "compliance_level": "sec_compliant"
+                }
+                
+                # Generate a thread_id if not present
+                thread_id = request_data.get("thread_id", f"thread_{message_id}")
+                
+                result = await self.chat_agent.process_chat(
+                    message_id=message_id,
+                    thread_id=thread_id,
+                    custom_gpt=custom_gpt,
+                    user_message=user_message,
+                    context_messages=context_messages,
+                    attachments=attachments
                 )
                 
                 processing_time_ms = int((datetime.utcnow() - start_time).total_seconds() * 1000)
                 result["processing_time_ms"] = processing_time_ms
+                
+                # Create thread if it doesn't exist before creating assistant message
+                if result.get("success", False) and result.get("content"):
+                    # Ensure user exists first
+                    user_created = await self.db_service.create_user_if_not_exists(
+                        user_id=request["user_id"],
+                        email=f"{request['user_id']}@bakergroup.com",
+                        display_name=f"Auto User {request['user_id'][:8]}"
+                    )
+                    
+                    if not user_created:
+                        logger.warning(
+                            "Failed to create/verify user",
+                            request_id=request_id,
+                            user_id=request["user_id"]
+                        )
+                    
+                    # Ensure custom GPT exists
+                    custom_gpt_created = await self.db_service.create_custom_gpt_if_not_exists(
+                        custom_gpt_id=custom_gpt_id,
+                        name=f"Auto-generated {custom_gpt.get('specialization', 'General')} GPT",
+                        description=f"Automatically generated Custom GPT for {custom_gpt.get('specialization', 'general')} tasks",
+                        system_prompt=f"You are a helpful {custom_gpt.get('specialization', 'general')} assistant.",
+                        specialization=custom_gpt.get('specialization', 'general'),
+                        user_id=request["user_id"]
+                    )
+                    
+                    if not custom_gpt_created:
+                        logger.warning(
+                            "Failed to create/verify custom GPT",
+                            request_id=request_id,
+                            custom_gpt_id=custom_gpt_id
+                        )
+                    
+                    # Ensure thread exists before creating message
+                    thread_created = await self.db_service.create_thread_if_not_exists(
+                        thread_id=thread_id,
+                        title=f"Chat with {custom_gpt.get('specialization', 'AI Assistant')}",
+                        custom_gpt_id=custom_gpt_id,
+                        user_id=request["user_id"],
+                        client_id=None  # Can be extracted from request if needed
+                    )
+                    
+                    if not thread_created:
+                        logger.warning(
+                            "Failed to create/verify thread",
+                            request_id=request_id,
+                            thread_id=thread_id
+                        )
+                        # Continue anyway - the thread might exist but we couldn't verify it
+                    
+                    # Create assistant message in database if chat processing was successful
+                    try:
+                        assistant_message_id = await self.db_service.create_assistant_message(
+                            thread_id=thread_id,
+                            content=result["content"],
+                            custom_gpt_id=custom_gpt_id,
+                            user_id=request["user_id"],
+                            confidence_score=result.get("confidence_score"),
+                            model_used=result.get("model_used"),
+                            processing_time_ms=processing_time_ms,
+                            compliance_flags=result.get("compliance_flags", []),
+                            sec_compliant=result.get("sec_compliant", True),
+                            human_review_required=result.get("human_review_required", False)
+                        )
+                        
+                        if assistant_message_id:
+                            logger.info(
+                                "Assistant message created successfully",
+                                request_id=request_id,
+                                thread_id=thread_id,
+                                assistant_message_id=assistant_message_id,
+                                processing_time_ms=processing_time_ms
+                            )
+                            result["assistant_message_id"] = assistant_message_id
+                        else:
+                            logger.warning(
+                                "Failed to create assistant message",
+                                request_id=request_id,
+                                thread_id=thread_id
+                            )
+                    except Exception as e:
+                        logger.error(
+                            "Error creating assistant message",
+                            request_id=request_id,
+                            thread_id=thread_id,
+                            error=str(e),
+                            exc_info=True
+                        )
+                        # Don't fail the entire request if message creation fails
                 
                 return result
                 

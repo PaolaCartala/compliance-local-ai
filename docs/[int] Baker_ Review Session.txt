@@ -1,0 +1,1117 @@
+# Converted from: [int] Baker_ Review Session.docx
+# Conversion date: 1758205044.9399855
+
+Transcript
+September 12, 2025, 1:00PM
+
+Rianne Westman   0:18
+Yeah, good morning.
+
+   0:20
+No.
+
+Paola Cartala   0:23
+Up to Friday.
+
+Rianne Westman   0:24
+Happy Friday. How are you?
+
+Paola Cartala   0:27
+I'm good.
+
+Rianne Westman   0:30
+Me too.
+Too early though for camera for me.
+
+Paola Cartala   0:35
+Now why?
+
+Rianne Westman   0:36
+7:00 AM here.
+
+Paola Cartala   0:40
+Oh, OK.
+And it will be like 7:00 AM, so it's 3 hours earlier than myself. So I start working at 5:00 AM for you.
+
+Rianne Westman   0:56
+Yeah. Oh my gosh, that's what do you, what do you get done in those hours?
+
+Paola Cartala   1:03
+Uh, everything because no one talks to me.
+
+Rianne Westman   1:06
+No. Yeah, it's quiet.
+
+Paola Cartala   1:10
+From 8:00 to 9:00 AM.
+until my first DSU with Michael, that's my most proactive, uh productive hours.
+
+Rianne Westman   1:26
+I bet Dan, you start at 5:00 AM for me. That's crazy.
+
+Paola Cartala   1:31
+And and now.
+Now in November, it will be one more hour, right?
+
+Rianne Westman   1:34
+If.
+OK.
+Yeah, in the.
+
+Paola Cartala   1:38
+It will be like 4:00 AM for you.
+
+Rianne Westman   1:43
+No, I think we get closer in time, right? Cause we fall back, so it'll be 6. So it'd be 6:00 AM for me right now. So yeah, we'll get closer.
+
+Paola Cartala   1:46
+Yeah.
+Oh, OK.
+You like morning or you like the afternoon?
+
+Rianne Westman   2:02
+I do not like morning.
+
+Paola Cartala   2:04
+Really? I love morning.
+
+Rianne Westman   2:05
+Yeah, no, I I like to sleep in. I think this is all problem.
+
+Paola Cartala   2:10
+No, I I hate to. I hate to see the sun disappearing and be a work like that's my worst nightmare.
+
+Rianne Westman   2:20
+That is true. I don't like that, but I also don't like waking up early.
+
+Paola Cartala   2:26
+Oh, I love waking up early.
+
+Michael Schreiber   2:28
+Hey guys, sorry, sorry I'm late. I'm gonna share my screen. I was in my defence. I was working on this project so it's not like it's not terrible. So I just wanted to let you know both of you. I just added this to the repo because it's gonna be useful for use with AI agents. But Paula, the read me in the.
+
+Rianne Westman   2:28
+Hey, Michael.
+Oh, good.
+OK.
+
+Michael Schreiber   2:48
+I created now has a really clear solution architecture that maps to what we've designed. I based it on uploading two other things, which was I turned the current lovable front end prototype into a really long context file. This has just the current front end.
+
+Paola Cartala   3:04
+Nice.
+
+Michael Schreiber   3:07
+So that can be used as context and then I exported the current C4 that we have as LM dot TXT. Also I date stamped these so if we change them we can obviously update it with a later version. But currently this is as of now, so I was able to use that to then generate this really nice readme that explains the UI components and.
+
+Paola Cartala   3:14
+Yeah.
+
+Michael Schreiber   3:27
+All the different back end components and all that. So that'll be good context for an LLM. Also good context for you, probably good context for Ian as well. So I'm gonna I'm gonna I was just literally about to render this as a markdown and then I was gonna copy and paste this over to our.
+
+Paola Cartala   3:28
+Yeah.
+Yeah.
+
+Michael Schreiber   3:43
+New loop which I also created so if I share that window.
+
+Paola Cartala   3:48
+Yeah, I was going to do that. It uses contact for my copilot for sure.
+
+Michael Schreiber   3:54
+Yeah, exactly. Yeah, that's the idea I was thinking. So we have this. This is like, I'm just going to create a new page here and call this one solution architecture.
+
+Paola Cartala   3:56
+Yeah.
+
+Michael Schreiber   4:09
+Document. I can't spell when I'm being watched.
+
+Rianne Westman   4:11
+I can smell.
+
+Michael Schreiber   4:13
+Actually, I think I did spell that right. Architect. Architect. Nope. Architect Kutcher. Architecture. There we go. That doesn't look quite right. OK, hopefully this pastes. There we go. Yay, pasted. So now I've got the current solution architecture.
+
+Rianne Westman   4:20
+OK.
+
+Paola Cartala   4:28
+Right.
+
+Michael Schreiber   4:33
+Here, but I would say the version of this to maintain would be the one that's in the repo, so I'm just going to go grab the link to it real quickly.
+
+Rianne Westman   4:50
+Is the repo something I can access or I'll just use the loop one? Yeah, OK.
+
+Michael Schreiber   4:51
+And put it here.
+Yep, I mean you can access it. I we we can probably try to keep it synchronized to loop, but the one like the one inside the repo is maintainable. So we're I'm just linking like maintain. I'm just gonna say maintained here. Whoops.
+
+Paola Cartala   5:11
+You know, and I got used to add some markdown documents on a doc folder for each feature that I'm that I'm adding.
+Just and and then and on the readme I link those documents just to yeah, just to help.
+
+Michael Schreiber   5:34
+Mhm.
+
+Rianne Westman   5:35
+M.
+
+Paola Cartala   5:40
+Giving more context on some features, some important features.
+
+Michael Schreiber   5:44
+Absolutely, but just.
+
+Paola Cartala   5:46
+I got used to that on on MKL project, yeah.
+
+Michael Schreiber   5:48
+Oh, go ahead. Yeah, totally.
+Yeah, so I think that's a great way to work. So just so every you know what else is I put in here. So I put the UX prototype specification. This is the spec I used to generate the the original.
+UX so that's in here as well. I've got a link to the server configuration, so we're currently waiting on Jeremy to troubleshoot an issue with why it's not showing up in RMM right now. But I put he's going on site this again this morning to figure that out, but.
+
+Rianne Westman   6:13
+OK.
+
+Michael Schreiber   6:18
+It did show up, it just showed us offline, so that's something. But here's the link to the server and then here's the link to the credential that we can use to log on to the server for development. We're going to use Ninja to access it remotely.
+And then I'm hoping we can also use VS Code remoting. So if you prefer to use VS Code on your local machine, we should release VS Code remoting to connect to it as well.
+
+Paola Cartala   6:42
+Yeah.
+Yeah, for sure.
+
+Michael Schreiber   6:45
+But I would naturally we're going to do development on the machine because it's what's got the GPU and also it's convenient. So plus I'm excited we actually have a strong machine to do local development on. That's good. That's pretty cool. So that'll be I think pretty fun.
+
+Paola Cartala   6:53
+Yeah.
+Yeah, I remember when we used vapor space and it was really fast to deploy and everything, so I love that.
+
+Michael Schreiber   7:02
+Uh huh.
+Yep.
+This is exciting. I think it'll be fun. But then I made I made a list of everything that we need to install on the server, or at least most of everything. There's probably some stuff I forgot, but we'll add it to this and then as I add these things, I'm going to list like how I installed them, where they were installed. So it's essentially recreatable. This is kind of the idea. So if we need to reinstall, we can easily.
+
+Paola Cartala   7:11
+Yeah.
+
+Michael Schreiber   7:29
+Using this as a runbook, so I will detail that as it happens, but that's my task for today is going to be finishing up this stuff. I want to direct your attention back though to the.
+
+Rianne Westman   7:30
+Yeah.
+
+Michael Schreiber   7:45
+The solution architecture document because at the bottom of this it starts getting into milestones and how we would go about releasing. So I'm going to go over stuff in more detail in a second too with the wireframe because I think that's actually a good way to go through it. So I'm going to walk you guys through that real quickly, but then I think we can.
+Just talk and then after we've talked about it, I would like to spend some time just trying to throw some milestones together and try to work back our way into this being a two-month project based on what we've got outlined here. So that hopefully does that make sense? Is that you're good with that?
+
+Rianne Westman   8:15
+OK.
+Yeah.
+
+Michael Schreiber   8:20
+Do you wanna record by the way? I'm not sure if we're recording, but you you got that going? OK, cool. So alright, so um.
+
+Rianne Westman   8:22
+Yep, I got the transcript going, yeah.
+
+Michael Schreiber   8:29
+I'm just going to go over this real quickly then just to understand like basically what we're going for. So the main objective is they are in wealth, financial management. They have to be SEC compliant. They're very, they're very cautious. They don't want any data leaving this machine. They want everything that happens to be logged immutably.
+An auditable. So this is one of the situations where we're definitely going to be doing event sourcing. I created an event, a source style audit table is one of the tables that's defined in SQLite, but that's the idea is everything that happens should be logged there.
+The other thing is they do want the data to be encrypted at rest, so we're probably going to want to take a symmetric encryption approach where we store encryption key as an environment variable on the machine and all the sensitive data would be encrypted within the SQLite database. So if somebody stole the SQLite database.
+They wouldn't be able to read those fields without the key that's in the environment variable. That's just one additional level of security that they're looking for here. Shouldn't be too big of a deal. I would recommend not turning on the encryption until we're going to release. It'll be easier to debug and test without the encryption in our way, but.
+Once we're actually in production, we do have to remember to turn on symmetric key encryption for their sensitive fields. Just throwing it out there is one of the core requirements and that aside from the audit logging piece, that's not too bad. It should be relatively straightforward to do that.
+
+Rianne Westman   9:53
+OK.
+
+Michael Schreiber   10:00
+That is really just one one extra step in Python and we can make that part of the decodes, so it shouldn't be a big deal. And Paola, if you want to investigate particular like a particular Python package that helps you with the encryption decryption, I'm fine with using a package too, but otherwise it's as simple as just.
+
+Rianne Westman   10:14
+Yeah.
+
+Michael Schreiber   10:16
+You know AES 256 encrypting it, but um.
+
+Paola Cartala   10:19
+Yeah.
+
+Michael Schreiber   10:20
+All right. So other than that, So what are we going for? So compliance first design, I kind of just talked through that. The other piece of that is we want human in the loop review before anything gets written back to any of their core systems. So if we're going to be pushing something to their CRM before it actually gets pushed to their CRM, it's going to get pushed to a review queue for someone in.
+Clients to review it and then approve it to get pushed to the CRM. So humans are always in control. They always have editability. AI can't do anything without being human approved. So humans retain full authorship of everything that's going on. That makes sense.
+
+Rianne Westman   10:54
+Yep.
+
+Michael Schreiber   10:55
+Great. So then the AI augmented human supervised. This is kind of the idea where the AI is doing the more routine stuff. Human oversights used for final approval and critical decisions. We want to include confidence scoring so we can flag things that are below a confidence interval. Like if it's less than 85% confident in addition to being reviewed, we also flag it as being.
+
+Paola Cartala   10:56
+Yeah, for sure.
+
+Michael Schreiber   11:15
+In low confidence to make it extra like please, please look at this. I already mentioned the AES 256 encryption. The rest of this is kind of just boilerplate stuff. One feature that's important to keep in mind is that they do have two external systems that they're hoping to integrate.
+I would say that you know the way that we're doing that for one of them is a read write approach. So that is their CRM Redtail. We have the ability to use the Redtail CRM API to both read and write. So one of the things we're going to want to follow up with them after Tuesday is get getting the credential to Redtail so that we.
+Can start developing with their API. But the idea is we're going to wrap that API in an MCP server so that we can expose that API to our agent with just the endpoints we need in a way that's contextualized to the AI understands how to use it as a tool.
+And so that will probably have endpoints to like load client information and then endpoints to write back documents or write back notes, which is what we're generating from this application. And they might also want to be able to save things from a chat thread that they're having back to the CRM if their chat that they're having is in the context of a user or something like that.
+So that would be a component of the ChatGPT element of the design, but otherwise that's pretty much it. The other thing in terms of scalable architecture, the idea is it's kind of an event driven architecture where we have events going to a queue called the inference.
+Cue within the SQLite database. So there's a decoupling between the API layer that's serving the needs of the front end and the AI inference system that basically is constantly in a loop trying to dequeue from that queue. If it doesn't find anything, it just waits, but if it finds something, it processes it with the.
+AI engine and then puts the response back into the queue so that the front end can scan the queue for things that are done and when those things are done can display them back to the user. So the advantage of that is there's no direct communication between the API and the inference server. So if we ever need to scale out to multiple inference servers, we could just add more.
+Workers and continue to have them dequeuing and nothing would have to change on the front end or API side other than we probably switched to using a distributed SQL like a sorry, not distributed a server based SQL like Mammoth SQL. That's very easy to change from a SQL to MSSQL if we had a scale up. I don't see them having.
+Scale out anytime soon, but it's just nice to design from that perspective. The other advantage that gives us is let's say the AI inference engine is kind of slow. That means that we can show a message on the front end side and have the users be patient. It also scales really nicely if we have multiple users trying to use the application at once.
+They.
+All be in queuing things at the same time and then they just have to wait their turn. And so part of that idea too is if they have a VIP user, like let's say people whose last name is Baker, considering the name of the company, maybe those people's requests get put at the top of the queue, right? Because they're the owner of the company who pays us and because they probably want their.
+Experience to be better, right? But I think that's kind of obvious, right? We can have a priority queue. So if depending on your role within the org, you can be priority high, medium, low, high people get their requests met before medium people before low people. So that I think is fairly straightforward as well. So that basically allows them to get away with just one server, but be able to service the need.
+
+Rianne Westman   14:29
+Mhm.
+Yes.
+
+Michael Schreiber   14:47
+Of a ton of people as well, and if they aren't happy with the performance in terms of how many people are waiting, then they would just have to add another server, right? Is this all making sense so far?
+
+Rianne Westman   14:58
+Yeah.
+
+Paola Cartala   15:00
+Yeah.
+
+Michael Schreiber   15:00
+The reason I chose SQ Lite for the database in the early phase is because SQ Lite is literally built into Python. It's the easiest database to work with for kind of rapid application development. So considering our timeline, it's just more convenient to not have to introduce yet another layer which would be like a SQL Server.
+But if we needed to, like I said, for scale out purposes, we could always do that. But otherwise it's SQL light is just super easy to work with. I think probably you probably would agree that it's a really friendly tool to use for the state, right? So.
+
+Paola Cartala   15:28
+Yeah.
+Yeah, I think it's the the easiest one.
+
+Michael Schreiber   15:32
+Yeah, exactly. So that was kind of what I was thinking. And because we we rarely have the luxury of working on a bare metal server, might as well take advantage of it. It's also has no latency because it's just on the device. So when you have an SQLite file on an SSD, it ends up being a super fast database also, which is another reason why it's good. Yeah.
+
+Paola Cartala   15:49
+Exactly. Yeah. Yeah.
+
+Michael Schreiber   15:52
+Um.
+So lots of advantages there. And then I do talk about the primary actors. So basically I'm calling financial advisors, the people who use the application, compliance officers would be the people who review before it gets written back to the CRM, and then an admin would be somebody like configuring the access or managing whatever. I mean, it's just basic roles.
+Nothing.
+Super fancy. The external system I mentioned, Redtail, Albridge is their portfolio system. Albridge, we don't think has an API. I know Paul, I asked you to investigate this a little bit further, but I think based on what we heard from them, they basically are able to download like 20 portfolios at a time via the UI and it sounds like it's kind of a manual process.
+
+Rianne Westman   16:33
+OK.
+
+Michael Schreiber   16:34
+So the thought there is we would probably have Joey's team like Juan Pablo or someone of or maybe one of our new RPA developers like Ines who's joining in a week jump in and just do a very simple power automate desktop automation to log into Allbridge, download the portfolios and save.
+Them to a folder and then the concept would be we would connect an MCP server that exposes the files in that folder as resources. So one component, the RPA maybe runs nightly and refreshes with the portfolios that are in the folder and the MCP server is just connected to the folder and turns whatever's in the folder into resources that.
+We can expose to the LLM. Does that? Is that design fairly straightforward?
+
+Paola Cartala   17:19
+Yeah, yeah, I think it will be our best option. Yeah, for sure.
+
+Michael Schreiber   17:20
+Does that make sense?
+Yeah.
+And then we have iOS devices because they're going to be using those to record their meetings using just press record. And so the concept is we want to make sure that we do have them, at least especially the meeting interface works well on mobile so that they can upload files from iOS and put them into the meeting transcription processor. So that's the only reason that's mentioned.
+But then front end layer I talk about this is we're calling it currently the compliant AI application. It might get a better name, but I have these are the major components that I built out and put into the C4 and I will say that the description for each of these on the C4 has.
+Really long form product owner guide for each page. If you want to understand the intent of what should be possible and why we built the page, etc. Rianne, that's actually a really great resource for you as well when you're testing, so you can check that out. I'm going to switch to showing that real quickly so you can see where that is.
+
+Paola Cartala   18:18
+Yeah.
+
+Rianne Westman   18:23
+OK.
+
+Michael Schreiber   18:23
+Uh, let me find my that that's the right screen. Sorry, I've got way too many windows open. This is what happens when I'm trying to work fast. But honestly, I think we really have quite a lot accomplished even just since yesterday. This is what I've been focusing on. I actually had time to put into this.
+So I was like, while I've got time, I'm going to spend like 4 to 5 hours actually getting the architecture in a good shape. So this project is off to a good start. But anyway, so if I go over here to the model objects, these are all the model objects that I put in so far and I think I put in everything. So I was kind of focused on just making sure it was populated with everything.
+
+Rianne Westman   18:44
+Yeah.
+
+Michael Schreiber   18:59
+So that Paula had all the objects that she needed to create diagrams and Paula knocked it out of the park with the diagrams. The only thing I tweaked on Paula's diagrams is I added a top level diagram and I changed. You had some inter process communication going on directly between the services and I just don't think that we want that. I think we want to have everything go through the SQLite.
+
+Rianne Westman   19:05
+Yeah.
+
+Michael Schreiber   19:19
+So that that's again better for scalability and and and such and also logging because we want everything audited anyway. It kind of makes sense that everything just goes through the database. So that was the only change. So we're using the database for IPC.
+
+Rianne Westman   19:28
+Yeah.
+
+Paola Cartala   19:30
+Yeah, I also I also need to add the sequelite components. We currently we have only two and I I have to check the the schema and and add the the components.
+
+Michael Schreiber   19:41
+Right.
+
+Paola Cartala   19:53
+Yeah.
+Yeah.
+
+Michael Schreiber   20:08
+Then if it changes, obviously just update it, but that's fine. Then under the level, this is what I was talking about earlier. If you go in here to the compliant AI UX, these are all the pages. This corresponds to each of the pages that you can see inside the application. Then if you click on one of them, the description now has a core user journey, keep product features.
+How it's supposed to work, right? Same thing with each of these. So product journey, core value proposition, user journey. So each one has a core value prop and user journey. So like when you're trying to test VN, you can go through and be like, can I actually do these things? Does it work this way, right?
+
+Paola Cartala   20:40
+Yeah.
+
+Michael Schreiber   20:42
+But that's all here, so you can click on each. Every single one of these has that. I was busy. I guess I skipped maybe as an exercise for the user. I apparently missed the security page. I don't even think we need that page, honestly, so we might just that's probably why I didn't do it. And we might just kill this page. It's kind of just meant to show them that it's secure.
+
+Rianne Westman   20:43
+Yeah.
+Yeah.
+
+Michael Schreiber   21:02
+Doesn't really have much of A feature. It's literally just your app's secure. Hooray. But people like seeing that, like the green boxes and the security padlocks and stuff. It makes them feel all warm and happy. So.
+
+Rianne Westman   21:05
+Yeah.
+
+Michael Schreiber   21:15
+Anyway, so that's where this lives. And then the diagrams we have so far system landscape, that's the super high level one I called. I called this one the solution diagram cause zoomed in on just the AI inference server itself. And then as Paul mentioned, our SQLite one is really anemic right now, but we can add more detail there.
+
+Rianne Westman   21:32
+OK.
+
+Michael Schreiber   21:35
+The UX BFF interaction diagram is also fairly anemic. As you actually add API endpoints to service these pages, you can show how they how each page connects to which APIs. Here I currently I just put in all all the pages, right? Exactly. Right. Exactly. Yeah, right.
+
+Paola Cartala   21:47
+We need to add the the interaction part, yeah.
+
+Michael Schreiber   21:53
+So that's that. And then the other two that are important is this one shows the interaction between the API layer and the inference service layer. This is the one that I changed where there's no direct connection between these two services. They only communicate via SQLite. So this is essentially just showing that that these guys communicate via SQLite.
+
+Rianne Westman   21:59
+OK.
+
+Michael Schreiber   22:13
+So we're using SQLite for interprocess communication. We actually have two separate Python processes running. We have IIS that are going to be orchestrating the API and we've got this guy running as a service. The reason why that's advantageous is that means if this thing ever dies or goes into an unhealthy state.
+The infrastructure team can monitor this via their RMM and so ideally we can get all the service requests for the servers down going to the IT team and not waking Paola up at 4:00 AM. So that's part of the reason why we want this to be a separate service. I mean why we want IIS to manage this is because if it's managed by IIS and the service manager.
+
+Paola Cartala   22:41
+Mhm.
+
+Michael Schreiber   22:50
+RMM can monitor the services for being down and send IT tickets for when that needs to be taken care of. So we're going to leave IT with a runbook for how to get the server back into a healthy state so that that can be an IT task and not a dev task, which is really, really important for Paula's mental health.
+
+Rianne Westman   22:55
+Mm.
+
+Michael Schreiber   23:07
+Um. Anyway, so that's that. Um.
+I think that's everything we've got so far. So there's still a bit more work to be done on the C4. Some of this stuff is actually easier to do when you actually get into the thick of developing those. So I it makes sense for Paola to do it because Paola's going to be building the app. So I didn't get carried away, but I thought it was really helpful to get all the stuff into the model. Paola, hopefully you think that was helpful.
+
+Rianne Westman   23:25
+Yeah.
+
+Michael Schreiber   23:32
+If not, if you know, if not, that's right, still you're fun by putting in all the model objects. But it it took a while to put in 79 objects, you know? But it's nice to it's it's nice to have. It's nice to have the right Legos in the box, right? Because when you've got the right Legos, it's much easier to put things together. It's kind of the thought.
+
+Paola Cartala   23:36
+Oh.
+Yeah, that was that was a great job.
+For sure, and I think this is one of the project that has the the best dogs, so that will be.
+
+Michael Schreiber   23:54
+I've been getting a little frustrated by our docs being anemic, so I'm trying to be like, hey guys, here's how you can do this.
+
+Rianne Westman   23:55
+It is.
+
+Paola Cartala   23:58
+Yeah, yeah. So I I think we will save a lot of time, a lot of dev time later having the like a great documentation. So that's that's awesome.
+
+Rianne Westman   24:01
+Yep.
+
+Michael Schreiber   24:02
+But.
+I agree. So that is that. The last thing I want to show, I'm going to go back over here to my my VS code environment. Um.
+Oh, that's the wrong one. Sorry.
+Um, but getting into uh.
+This one.
+I think this window works. Yeah, this is where I've got the read me pull up. So this is read me as it lives in the repository I wanted to jump into, so I think I talked through most of this already.
+Horizontal scaling piece, the performance optimization piece, Uh, Wax compliant, Uh, the front end stack being react with Uh the Uh.
+Cuz that's what and you and Chad's CNUI cuz that's what Lovable uses. The back end we've got fast API with Pydantic validation. It's using Pydantic AI for agent orchestration. SQLite is being used for store.
+We're going to use Azure AD for authentication so users can log in with their Microsoft credentials. We're not going to be saving anything to Azure, we're just going to use Azure for login so that it's just a convenient way to handle that without having to store passwords and stuff.
+We're using Olama to host the LLM models. I'm also going to install AI Foundry on the server so we can test whether AI Foundry works better or worse than Olama. We're going to start with Olama. It integrates really nicely with Pedantic AI, so that's a good reason for that. I already mentioned the MCPs.
+
+Rianne Westman   25:38
+Mhm.
+
+Michael Schreiber   25:51
+The RPA security, so that's all covered. So this is the part that I think now becomes relevant for the next piece of this. I know we're probably running a little low on time even for this meeting. I think we were scheduled for half hour, right? Or how long did we get for this one? We got an hour. OK, cool. That's good news. So cuz this is kind of where we want to get.
+
+Rianne Westman   26:03
+Uh, we got we got an hour.
+Yeah.
+
+Michael Schreiber   26:11
+Into starting to create milestones and work items, right? So phase one currently, obviously I'm working on getting some of the DevOps stuff done. Eventually if I run out of time or I get pulled away, some of that might fall on Paula, but I put together the checklist of what I'm doing there and then like I said, I just want to make sure.
+We're maintaining instructions as we do the things to record what we did so that someone else could repeat it. So it's not confusing. It's confusing how to get the server back into the state that we need. Um, and I'll be putting that documentation together as I go. Uh, but that's gonna be the first milestone.
+
+Rianne Westman   26:36
+Mhm.
+
+Michael Schreiber   26:46
+It's like server configuration, so that's what I'm working on right now and I'm going to create cards for my checklist in Monday so that we can see how I'm progressing through that. I haven't gotten around to doing that yet, but I will do that.
+
+Rianne Westman   26:58
+OK.
+All good. I got a I have a draft milestone on the high level kind of from what this is Fortnite as ago.
+
+Michael Schreiber   27:03
+Um.
+Fantastic.
+OK, great. Yeah, if you if you wanna do that, that's that saves me some time. Yeah, so that's totally cool. But that's our first milestone is literally me just going through the server and setting all that stuff up.
+
+Rianne Westman   27:17
+Mhm.
+OK.
+
+Michael Schreiber   27:24
+Then the next milestone I think is this core platform piece. We want to get to the point where we have a release of something for them to test. The thing that's easier for them to test and just jump in to use is the chatbot feature. I was thinking we would start by just trying to get the chatbot feature working.
+
+Rianne Westman   27:33
+Mhm.
+
+Michael Schreiber   27:43
+Number one, Paola has already built this. This is literally just check your GPT except we're using Olama, right? So it's literally an app we've built already. So I think it's a really easy starting point and it allows us to release something and make sure that we can deploy it and get through all of that stuff really early on.
+
+Rianne Westman   27:48
+Mhm.
+Yeah.
+Mhm.
+Oh.
+
+Michael Schreiber   28:02
+So I would say our first milestone should be let's just build the chat bot feature, not worry about the meeting notes, let's not worry about the the.
+
+Rianne Westman   28:10
+6.
+
+Michael Schreiber   28:12
+Templated stuff, whatever, right? And then one thing I want to point out too, this application is basically a remix of several apps we've built already, right? Like the meeting transcript piece kind of looks a bit like progress notes from KO. The the chat bot looks a lot like Chector GPT and the template.
+
+Rianne Westman   28:15
+Yeah.
+Yeah.
+
+Paola Cartala   28:26
+Yeah.
+
+Michael Schreiber   28:32
+The piece kind of looks a lot like Synaptic, right? So we're literally just doing a remix, which is nice because you've already built this app three times, right? So you should have a pretty clear understanding. I imagine it'll come together pretty quickly. That's why, even though it's a little bit of an aggressive timeline.
+
+Paola Cartala   28:34
+Yeah.
+
+Rianne Westman   28:35
+Yep.
+
+Michael Schreiber   28:48
+Number one, the client is totally comfy with some things taking longer than others. We've had that conversation. They understand it's going to be incremental release, so that's really great. The client actually kind of gets agile. That's rare, so that's cool. The other thing I would mention is since you've already built the application, it should go pretty quickly, but if we have an issue.
+We've only gotten to like 2 out of the three features in two months. This client's more likely to extend the project than they are to like get angry. So I just want to throw that out there. So focus on quality rather than rushing to get everything done. But at the same time, I'm hoping we can get all this done in two months. I think that's actually reasonable.
+
+Rianne Westman   29:17
+OK.
+
+Paola Cartala   29:20
+Yeah.
+
+Michael Schreiber   29:25
+So um.
+So that's pretty much that in terms of where I think the first milestone should be the next milestone. Like I I agree that this should be like a phase two with the the the CRM integration, but I would say in between the chatbot getting done.
+And getting into doing the the MCP stuff. The next one I would focus on doing is just a basic implementation of the meeting note processing like so can we upload a transcript and extract information? Part of that does involve connecting to Red Tail to pull in like client specific info if the meeting is about a client.
+So you probably will be doing the red tail CRM connectivity to make that feature work, and similarly we might need to pull in portfolio information to make that feature work. So once we're getting into those features, we want to turn that on and that'll also enrich the functionality of the chatbot because we can enable those MCPs as tools within the.
+
+Rianne Westman   30:01
+Mhm.
+
+Michael Schreiber   30:21
+Chat bot experience. So that is kind of what I'm envisioning for phase two is the meeting notes and getting the MCP's done and then phase three would be in my mind the document piece. So we do that as the document piece is phase three.
+
+Rianne Westman   30:35
+I.
+
+Michael Schreiber   30:36
+And then from there, if there's any additional time, we can start like putting together like an like an audit report or something like that and and making and starting to work on fine tuning and stuff like that, right? That would be how we'd use the balance of the time.
+Any questions on that or the phasing or the structure? So basically we've got like a horizontally oriented phase of just like I'm calling it just a config of having to bang through getting all the server stuff configured. And then I would say we switch to feature oriented vertical slice milestones for the implementation where we start with the chat bot, we then move to do.
+Doing the meeting transcript processing which will then bring in needing to do the two MCP servers and then we enrich the chat bot we built in phase one with the MCP servers. Then we introduce the document processing as the last thing that we do.
+Uh, that good with everybody?
+
+Rianne Westman   31:30
+Yeah.
+
+Paola Cartala   31:32
+Yeah.
+
+Rianne Westman   31:34
+Yes, I I made three core application build milestones, Chatbot, Note, CRM, portfolio and document processing.
+
+Michael Schreiber   31:34
+Awesome.
+Are you you wanna share your screen for a second and I can take a look? We can maybe we can spend the rest of the time just in on in Monday. That'd be cool.
+
+Rianne Westman   31:48
+Yeah.
+Yeah.
+
+Michael Schreiber   31:56
+The infrastructure model deployment is 1 milestone and we've got core build.
+Core application build that course. So the only other thing I would say is um.
+Yeah, agent workflow. Maybe call that. Maybe call that AI agent workflow, AI agent workflow, find optimization and fine tuning.
+The the workflows will actually be done as of each of those previous milestones, but that would be more of a fine tuning phase, yeah.
+
+Rianne Westman   32:21
+OK.
+
+Michael Schreiber   32:24
+Yep.
+
+Rianne Westman   32:26
+This insecurity training go live.
+
+Michael Schreiber   32:29
+So in terms of like now, I think this is where we talk with Paul about what seems reasonable in terms of deadlines and targets. As I said, this is going to be incremental. So we should get the deadline target dates there to be more Gant style rather than all being the same overlapping time period. And I don't think infrastructure model deployment is going to take that long. So considering today.
+
+Rianne Westman   32:45
+Mhm.
+
+Michael Schreiber   32:50
+It's Friday. Maybe give me until Tuesday for that.
+
+Rianne Westman   32:54
+All right.
+I'm going with a like Monday project start. Do you want to keep? When do we want the eight week timer?
+
+Michael Schreiber   33:04
+No, we started. We kicked off when we had that meeting with the client. It's officially the start of our project.
+
+Rianne Westman   33:07
+Yeah, so got it. So we're looking for.
+
+Michael Schreiber   33:11
+Yeah, we're. I'm definitely already billing them, so.
+
+Rianne Westman   33:14
+Yeah, let's do the 11th to maybe the 11th.
+
+Michael Schreiber   33:20
+Uh, sure. Yeah, that sounds. That sounds good.
+
+Rianne Westman   33:26
+OK. So we've got infrastructure from the 11th to Tuesday.
+And then the three core application builds, what are we thinking?
+
+Michael Schreiber   33:39
+So how long, how long do you think recently it'll take to deliver just the chatbot feature? Paola, I I know this is this is super rough and granted we'll probably refine this, but I we're just trying to get initial timelines going so we got to kind of back our way in.
+
+Paola Cartala   33:45
+Um.
+
+Rianne Westman   33:48
+Yeah, yes.
+
+Paola Cartala   33:55
+Maybe less than a week.
+
+Michael Schreiber   33:58
+OK, let's let's go for let's go for one week on the chatbot feature.
+
+Rianne Westman   34:01
+OK.
+
+Paola Cartala   34:02
+Yeah.
+
+Rianne Westman   34:03
+All right, I'll do more of a a deadline here versus a.
+
+Michael Schreiber   34:07
+Yeah, that's fine.
+
+Rianne Westman   34:08
+OK.
+
+Michael Schreiber   34:10
+Then let's say that the core application build.
+
+Paola Cartala   34:18
+Yeah, that depends on the access to the both the CRM and.
+Uh, how quickly they give us access?
+
+Michael Schreiber   34:30
+Yeah, I feel like that one based on the the need for access and the fact that there's two MCP servers to build, I'm gonna say two weeks, so starting from September 19th.
+
+Rianne Westman   34:34
+Mhm.
+
+Paola Cartala   34:37
+Yeah, yeah, for sure. Mm-hmm.
+
+Rianne Westman   34:40
+OK. So aim for October 3rd, just the October 3rd, OK.
+
+Michael Schreiber   34:47
+And then the document processing, that one is probably going to take a little bit more fine tuning as well. So let's say two weeks for that one.
+
+Paola Cartala   34:55
+Yeah.
+
+Rianne Westman   34:55
+So in overlapping with this one or two weeks post the third. OK, all right.
+
+Michael Schreiber   34:58
+Took two weeks post.
+And then let's say two weeks for fine tuning.
+
+Rianne Westman   35:08
+Which would put us in Hong.
+
+Paola Cartala   35:10
+Yeah, maybe one week for fine tuning and one one and a half.
+
+Michael Schreiber   35:13
+Let's say two weeks cause keep in mind that might they'll they'll be they'll we have to go back and forth with the customer to get their feedback as well. So I would say two weeks just cause there might be some delays.
+
+Paola Cartala   35:20
+Oh yeah.
+
+Rianne Westman   35:24
+OK.
+
+Paola Cartala   35:24
+Yeah.
+
+Michael Schreiber   35:25
+And then we obviously that can continue and bleed over into the testing and security violation, but so that that works. And then so let's say that goes until look from there for like you leave yourself one week for training and go live. So give yourself like.
+
+Paola Cartala   35:28
+Yeah, yeah, exactly.
+
+Michael Schreiber   35:41
+If we're saying we say the final date is the 11th, right?
+
+Rianne Westman   35:45
+Mhm.
+
+Michael Schreiber   35:46
+So then.
+
+Rianne Westman   35:48
+And realistically, prob, you know, like this is always an.
+
+Michael Schreiber   35:50
+Yeah, let's say, let's, let's call it the 14th is the actual end of this project. Maybe let's give us to the end of that week.
+
+Rianne Westman   35:54
+Yeah.
+Yeah, OK.
+And we'll put testing to the 7th.
+
+Michael Schreiber   36:08
+Yep.
+
+Rianne Westman   36:08
+And then this to the 14th.
+
+Michael Schreiber   36:11
+14th.
+
+Rianne Westman   36:12
+Excellent.
+
+Michael Schreiber   36:14
+So looking at our timelines, that actually doesn't feel too crazy to me, right?
+
+Paola Cartala   36:19
+No.
+
+Rianne Westman   36:19
+Yeah.
+Sorry, it's gonna bug me. I'm gonna make a match. All right, yeah, definitely realistic.
+
+Paola Cartala   36:28
+Yeah, for sure.
+
+Michael Schreiber   36:28
+Yep. Oh, what? We actually one thing we missed and it should probably just be included as a as part. It's fine. I mean, it's not really missed, but we have to make sure that we include. We probably just want us to talk to work items now just so we can get a few key ones that I don't want to forget about.
+But one of them should be the RPA, the RPA development. That would be a component of the the the CRM piece. So we're gonna have to bring in an RPA dev during that period. That's a parallel work stream, so I don't think that it messes with us too bad, but.
+
+Paola Cartala   36:53
+Oh yeah.
+
+Rianne Westman   37:02
+OK.
+
+Michael Schreiber   37:03
+Uh, the the RPA and put that under the Yeah, you could say that you can take with milestones, et cetera. We'll get around to it, but uh.
+
+Rianne Westman   37:10
+Yeah.
+Yeah, the CRM piece or the Um, what do we call it? Uh.
+
+Michael Schreiber   37:17
+That, yeah, that should be the core, the core build for the no CRM portfolio, Yep.
+
+Rianne Westman   37:22
+Yes.
+OK.
+
+Michael Schreiber   37:25
+And then the other.
+The other thing we should just keep in mind is we do have to actually update the UI to match the API. So there's there will be some front end changes that might involve bringing in a front end depending on you know how successful Paul is making those changes.
+
+Rianne Westman   37:41
+OK.
+
+Michael Schreiber   37:45
+With Lovable, but we may need to bring a front end for adjusting the the UX prototype to actually match up with the API endpoints that Paula creates. That shouldn't be a too. That shouldn't be too too much work. There's not a ton of pages.
+
+Rianne Westman   37:46
+Mhm.
+OK.
+
+Paola Cartala   37:57
+Yeah.
+
+Michael Schreiber   38:00
+But there will be probably a little bit of front end work just taking the UX prototype that I built and actually wiring it to the APIs. The other piece of that work is in adding the Azure AD off to the front end. Those are a couple of front end tasks we'll probably bring in something like a Lucas to do.
+
+Rianne Westman   38:01
+Mhm.
+Yeah, OK.
+Do that. Yeah, that's it for the the UIP, yeah.
+
+Michael Schreiber   38:23
+I would say for each of those there should be a task like front and update UI prototype to match API. That's a component of each of the core build tasks because for the first one we're just going to hide the features that aren't done yet. But then as each one of the releases will have a UI piece to it, right? So we can actually release it. So that that card should repeat three times for each of the core.
+
+Rianne Westman   38:35
+OK.
+Got it.
+
+Michael Schreiber   38:43
+Build steps.
+
+Rianne Westman   38:44
+Got it. Duplicate for all three. OK, I'll do that. Same with this one or no, this is a one.
+
+Michael Schreiber   38:47
+Yeah.
+No, that's the one that's only that one's only attached to the first one, because once it's done, it's done.
+
+Paola Cartala   38:51
+Yeah.
+
+Rianne Westman   38:53
+Yeah, yeah. OK, perfect.
+
+Michael Schreiber   38:56
+That's part of the advantage of doing this incrementally. Some things just once they're done, they're done and they get they get done early because they have to be in order to release the application. So it it saves you from having the oh right, I have to add auth, oh right, I have to add logging right. Like that's something like it just ends up blowing the product out at the end. Otherwise if you try to do a Big Bang so.
+
+Rianne Westman   39:13
+Yeah, OK.
+
+Michael Schreiber   39:15
+This is why we try to do this to be incremental. Again, I'm very much trying to have this project be a model project so that people have a nice model to look at when they're like, hey, how is this supposed to work, you know, so.
+
+Rianne Westman   39:27
+Yeah.
+There we got chat bot, CRM and notes.
+
+Michael Schreiber   39:38
+Yes.
+And then there should also be like there are a few other a few other pages that'll eventually need UI updates as well, but we can we can either create a stub for that like you know, UI refinement stub or something like that, but there probably will be a UI refinement step as well.
+
+Rianne Westman   39:50
+Mhm.
+Yeah, we'll put that maybe in the one of the later milestones UI.
+
+Michael Schreiber   40:06
+Sure, yeah.
+
+Rianne Westman   40:12
+Let's call that.
+We'd stick with the AI one, or maybe the 10?
+
+Michael Schreiber   40:17
+Sounds good.
+I would put that one under AI agent optimization and fine tuning because that would that's a parallel work stream during our agent fine tuning.
+
+Rianne Westman   40:24
+Yeah.
+Yeah, perfect. The create runbook and restart script. I'll stick on the training and go live.
+
+Michael Schreiber   40:44
+And then this one should be, I think, fairly straightforward, but we need we should have cards for getting the credential for for Uh.
+
+Rianne Westman   40:53
+Oh yeah, I got those up here for me to do.
+
+Michael Schreiber   40:54
+Yeah, if you wanna you perfect. I'm not sure if you wanna put an additional milestone for those or actually you could attach those to the server config milestone.
+
+Rianne Westman   40:56
+Yeah.
+Mhm.
+Yeah, I like that. Also get that all the note. Um.
+Examples for us. Here we go.
+
+Paola Cartala   41:13
+We will also need the users for the priorities.
+
+Michael Schreiber   41:17
+Yeah, yeah, yeah, that's right. We need a user list as soon as you can add a card for gather their user list.
+We have to add those people to a security group and then we'll add make them the authorized users of the app and then we can also keep track of their priority inside of our app.
+
+Rianne Westman   41:29
+Yeah.
+Yeah, perfect. I'll keep that up for me.
+All right.
+This one won't really get done until down here. This one's last.
+Sorry.
+OK.
+This morning I'll get the chat, but.
+Oh, I forget. We're calling this something different. Document processing is different than notes, or I'm removing the notes from here.
+
+Michael Schreiber   42:34
+Nope, document processing is a separate thing. In fact, I'm going to show the lovable. I didn't do that yet, so let me do that real quick. This'll make it. It'll make it really obvious. So come over here. I hide this.
+
+Rianne Westman   42:36
+Yeah, OK.
+
+Paola Cartala   42:37
+Yeah.
+
+Rianne Westman   42:44
+Yeah.
+
+Michael Schreiber   42:48
+This is the app as it's intended, so I guess the dashboard will eventually should be honestly its own card as well. The dashboard is pulled in stuff from elsewhere in the app, so it should be pretty straightforward. But the main things we're talking about, so phase one is this chat feature where they have the ability to.
+
+Rianne Westman   43:03
+Yeah.
+
+Michael Schreiber   43:07
+Like they have custom GPTs just like we have. This is literally just like Schecter GPT where they can define like the system prompt. They'll be able to determine like, yeah, I want this one to talk to Redtail. Yes, talk to Elbridge. There's no Black Diamond integration yet, but they'll put it in there because they talked about it like, yeah, so I can enable my my two MCP servers.
+I can define my system prompt, I can describe it, I can name it, I can give it a specialization, I can activate or deactivate it, and then each of my threads. When I start a new thread, I can define who I'm talking to.
+
+Rianne Westman   43:28
+Yep.
+
+Michael Schreiber   43:44
+Then I can message the agent and then I can see which agent I was talking to for each of my threads. I can filter and search over my threads, filter by which type I was talking to, search by the text search. If I click on a thread, I can pull up and add to the thread, I can see.
+But I said I can upload a file to the thread. If I wanted to read the file, I can uh.
+
+Rianne Westman   44:05
+OK.
+
+Michael Schreiber   44:11
+You know, that's basically that's basically your chatbot, right? But this is literally just after GPT. So this this part should be only the only wrinkle is that we've got a few more features. I mean we can put tools in that one as well, but like we're exposing the tools like it's pretty straightforward.
+
+Rianne Westman   44:16
+Yeah.
+
+Michael Schreiber   44:28
+That's the first feature. I want to release that one initially because number one, that gets in front of the customer. They can start thinking about additional use cases and it'll actually keep them coming up with tools they want to add. So it's a work generator for us to release that to the customer as quickly as possible.
+So that's the other reason why I want to release that first. But I think it'll just get sustained buzz and momentum for the project when they get something that they can start using and benefiting from. And it's kind of a more free form unstructured. It just gives them a safe place to have an AI to use, right? So that's a pretty quick win, right?
+
+Rianne Westman   44:51
+Mhm.
+
+Michael Schreiber   45:00
+I think it'll be the fastest feature to do, right? The next thing and of course initially we're not going to have the ability to turn on these two MCPS cuz they won't be done, but as soon as it'll always be MCP off. But then once we finish the MCP feature then we can enable them turning on these so that they.
+
+Rianne Westman   45:05
+Yeah.
+
+Michael Schreiber   45:20
+And can pull in stuff from the MCPS. So that's pretty straightforward. Make sense.
+
+Rianne Westman   45:23
+OK.
+Yeah.
+
+Paola Cartala   45:26
+Yep.
+
+Michael Schreiber   45:27
+OK, process notes here. Basically the concept is they can upload a file from their iPhone or from their computer. They can type or copy paste it in here. We're not we're not handling audio recording, we're just handling text right now. But the idea is they could also select which client was this meeting for.
+They could select what kind of meeting it was. Maybe if it's a meeting about their portfolio, then there'd also be an option here to pick their portfolio or whatever, right? This is where the two MCP's come in because the client information comes from Redtail, the portfolio information comes from the the wall bridge export, right? So that's why those two features are related to this feature.
+But then you do this and you hit generate note and you get processing notes and this is obviously mocked right now. But this is then what you get, right? So here's what was discussed, here's the recommendations, here is compliant, and then if I hit send for review, this would then send it to the review queue for.
+To the CRM, right. So that's actually another feature. Actually, we should add that as a separate milestone, CRM write back with the review queue. That actually should be its own milestone and we missed that one. So we'll have to slot that one in, probably rob a bit of time from one of the other milestones to make that fit. But that's actually, I'm glad I just went through this cuz that's.
+
+Rianne Westman   46:37
+Oops.
+See.
+
+Michael Schreiber   46:44
+Actually a feature, right? So I send this to the review queue. I could add it here or I could send it to the queue. If I send it to the queue, that's this review queue feature where anything that's on its way to the CRM. I can either flag it as something I need to review more thoroughly myself to manually flag things are auto flagged if the confidence score is below whatever the.
+Confidence threshold is and then if I need to edit it, I'd be able to click this Edit button to edit what was going to go in before it went in. Or I could hit approve and post to CRM and that would then send it into the CRM.
+So that feature is that the flagged is nothing other than these are the ones that are pending. The flagged items would be items that were flagged and then escalate would be like send a notification e-mail to the owners or something. I'm not even sure if they need that, but I thought that's probably a feature they would want. So we might eventually add like a notification feature for like.
+Super high priority escalations or something like that, but that's so that's the other milestone we need is handling the review queue and the write back to the CRM.
+
+Rianne Westman   47:48
+Mhm.
+
+Michael Schreiber   47:49
+And then the audit trail. This is just meant to be a view of the audit table, so this should be pretty straightforward to do. But that's all this is. And then the security page, as I mentioned, this is literally like we're probably going to remove the security events section and it'll just say things like it's all good and make them feel good about it.
+Being secure. So like the fact that it's encrypted and the encryption is on, so it can be pretty static. Then I put in this upcoming features section. We can probably leave this in, but it's just letting them know that the Red Tail CRM integration is going to come soon. This is going to come soon.
+
+Rianne Westman   48:14
+Yeah.
+
+Michael Schreiber   48:29
+We also talked about eventually doing the file server integration and AI index integration. Those are listed future phase when those are not included in this current scope. But we did talk about that being a thing we could do where they have a file server that has files, they might want those indexed and exposed as yet another MCP. We could do that.
+It's just a future phase and the other future phase item is eventually all bridges getting replaced with Black Diamond. When that gets replaced, we have to replace our RPA to target Black Diamond instead of Allbridge. Um That is pretty much it. The only other thing that's here is a settings page. This is probably just mapped to.
+Settings in the database. Really straightforward ability to define a user profile. We're not going to have a password feature because we're using Entre login, so this part would go away, but maybe the ability to deactivate a session could be a thing they would want.
+Not super important, but it's there. Those are kind of niceties we probably would only add if we get to it kind of a thing. Same story for the notifications. They didn't specifically say that they wanted them, but I've never built an app where people didn't want notifications, so there might be a concept of sending them statuses of how many things were processed.
+On a weekly basis, or sending them things with them was flagged for compliance, or sending them an alert when there's a review that's escalated. Those are pretty straightforward features to add, just using M365 to send them an e-mail. So that's something we can add if we need to.
+Again, kind of a feature we would add during the refinement phase. The integrations here is maybe just a way to validate that the the MCPS are working, so this would just be testing the connection to the MCP servers.
+Compliance here that we do have the ability for them to define their conf. threshold for where when things flag based on the confidence scoring. So that would be it's the feature. It's really just setting a number. So like none of this is complicated. That's why I didn't spend a lot of time on the settings page, but it's here. It's pretty obvious.
+And then like, you know, none of this is crazy, but just wanted to go through it so you see what's here. But any do you see any anything that's super crazy or or challenging or that you're worried about from all of this so far, Paula?
+
+Paola Cartala   50:49
+No. No, I think we're good.
+
+Michael Schreiber   50:51
+Honestly, I really I like how the application came out so far. I think design wise um.
+Pretty pretty not bad. I I like kind of like it. So uh, I I.
+
+Paola Cartala   51:02
+It's it's still, it still blows my mind how lovable can do this kind of things in like minutes.
+
+Rianne Westman   51:09
+Yeah, so quickly.
+
+Michael Schreiber   51:10
+Yeah, well, part of it too is I gave it very clear specifications. I gave it suggestions of like things to emulate and like I have a way of prompting that makes it really fast, but just in general it is super fast, right? But it helps that we've rebuilt similar systems. Like I used my learnings and checker GPT for how to design this really quickly.
+
+Paola Cartala   51:11
+Yeah.
+Yeah.
+
+Rianne Westman   51:29
+Next step.
+
+Michael Schreiber   51:30
+Right.
+
+Paola Cartala   51:31
+And it's also because I'm back end, so.
+
+Rianne Westman   51:32
+Nice.
+
+Paola Cartala   51:35
+A a button that that likes hovers that that I made me. Oh, imagine an entire app.
+
+Michael Schreiber   51:37
+Yeah, right.
+Right.
+Yeah, no, totally. Well, I love that for back end developers, it makes front end accessible, like at least for the purposes of like even just understanding like, OK, now you have a very clear idea of what UIS you have to be able to satisfy, right? Like it's super clear. So I think that it's a really nice feature that way. It's so much better than just doing a wireframe or a static thing.
+
+Paola Cartala   51:49
+Yeah.
+Yeah.
+
+Michael Schreiber   52:03
+It's way faster. Why would you ever just wireframe when you could do a UX prototype? I don't understand why you would do that now. So yeah, plus the client can even play with it. The client can get excited by playing with it and feeling like they actually already understand how it's going to work, which is also that's kind of like them training themselves while they're even waiting.
+
+Paola Cartala   52:11
+And it looks really awesome.
+
+Rianne Westman   52:14
+Yeah.
+
+Paola Cartala   52:19
+Yeah.
+
+Michael Schreiber   52:23
+Waiting for you to build it, right? I think that's pretty cool.
+
+Paola Cartala   52:25
+Yep.
+
+Michael Schreiber   52:28
+So, alright, well that's where we're at. I I think again, I think we really hit the ground running on this one. Um, I'm very happy with where we're at. Just wanna flash that again so we can slide into that theorem write back feature. Yeah.
+
+Rianne Westman   52:36
+Um.
+Yeah, but put it right after here and I just stuck it in between these two.
+
+Michael Schreiber   52:41
+Yeah. So we, I think that's that's fine. Yeah.
+
+Rianne Westman   52:46
+Yeah, for now.
+
+Michael Schreiber   52:49
+Yeah, yeah, 'cause that just take that robs a little bit of time for fine tuning and I think that's totally fine 'cause again, the fine tuning can bleed into the testing and security validation. That looks fine to me.
+
+Rianne Westman   52:58
+Oh, good.
+
+Paola Cartala   52:58
+Yeah.
+
+Rianne Westman   53:00
+Great. All right.
+
+Michael Schreiber   53:03
+Yep, cool. And then I I was say Paula, that's right. I would say Paula, if you want to go back and add more work items, that's totally fine. I just wanted to make sure we at least nailed down the milestones and then we can add more work items. If you want to add work items to the infrastructure model deployment for all the ITE stuff that's currently in the.
+
+Rianne Westman   53:04
+So then we're meeting with clients every Tuesday.
+Yeah.
+
+Michael Schreiber   53:22
+Um checklist that I put together that's on the loop then I will. I will update that as I get through doing stuff.
+
+Paola Cartala   53:29
+Yeah.
+
+Rianne Westman   53:31
+All right, I'll start on DSU's up after that client meeting on Tuesday.
+Meeting on Tuesday.
+
+Michael Schreiber   53:37
+Sounds good. It might turn out that some of this changes too. Actually we decided we don't want that feature or whatever, but this should all be very flexible and very quick to change now that we got to jump on it. So I'm not super worried about that at all, but I'm kind of guessing they're going to be like, oh, this looks pretty good, let's, you know, let's rock. So we'll see what happens.
+
+Rianne Westman   53:38
+Well.
+
+Paola Cartala   53:39
+Right.
+
+Rianne Westman   53:55
+Yes.
+
+Michael Schreiber   53:55
+Happens.
+
+Rianne Westman   53:57
+Let's move quick. Awesome. Well, thanks for doing so much free work. Yeah.
+
+Paola Cartala   53:58
+I'm really excited on this project. This will be a great project, yeah.
+
+Michael Schreiber   54:01
+Yeah, it's super exciting project. Yeah, I agree.
+So glad we're all excited. I think it'll be a lot of fun. And yeah, like I said, we hit the ground running. So thanks guys. Appreciate it.
+
+Rianne Westman   54:12
+Yep. Thanks guys. Have a good weekend.
+
+Rianne Westman stopped transcription

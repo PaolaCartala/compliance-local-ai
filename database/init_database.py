@@ -82,11 +82,11 @@ def create_mock_users():
             conn.close()
             return True
         
-        # Insert mock users
+        # Insert mock users (consistent with mock authentication system)
         mock_users = [
-            ("user_001", "user1@baker.com", "Financial Advisor 1", "financial_advisor"),
-            ("user_002", "user2@baker.com", "Compliance Officer 1", "compliance_officer"),
-            ("user_003", "user3@baker.com", "Administrator 1", "administrator"),
+            ("auth0|sarah.johnson", "sarah.johnson@bakergroup.com", "Sarah Johnson, CFP", "financial_advisor"),
+            ("auth0|michael.chen", "michael.chen@bakergroup.com", "Michael Chen, CFP", "compliance_officer"),
+            ("auth0|lisa.wang", "lisa.wang@bakergroup.com", "Lisa Wang, CFP", "administrator"),
         ]
         
         for azure_id, email, display_name, role in mock_users:

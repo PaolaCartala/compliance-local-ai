@@ -433,3 +433,44 @@ class ChatService:
                 exc_info=True
             )
             raise
+
+    async def delete_thread(
+        self, 
+        db: AsyncSession, 
+        thread_id: str, 
+        user_id: str
+    ) -> bool:
+        """Delete a thread and all its messages."""
+        try:
+            # First, verify the thread exists and user owns it
+            thread = await self.get_thread_by_id(db, thread_id)
+            if not thread or thread.user_id != user_id:
+                return False
+            
+            # Delete all messages in the thread first (due to foreign key constraints)
+            await db.execute(
+                delete(orm.Message).where(orm.Message.thread_id == thread_id)
+            )
+            
+            # Delete the thread
+            await db.delete(thread)
+            await db.commit()
+            
+            self.logger.info(
+                "Thread deleted successfully",
+                thread_id=thread_id,
+                user_id=user_id
+            )
+            
+            return True
+            
+        except Exception as e:
+            await db.rollback()
+            self.logger.error(
+                "Failed to delete thread",
+                error=str(e),
+                thread_id=thread_id,
+                user_id=user_id,
+                exc_info=True
+            )
+            raise

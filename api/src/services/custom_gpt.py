@@ -149,3 +149,117 @@ class CustomGptService:
             )
             await db.rollback()
             raise
+
+    @staticmethod
+    async def get_all_gpts(db: AsyncSession, offset: int, limit: int):
+        """Gets all active Custom GPTs (public access)."""
+        try:
+            result = await db.execute(
+                select(orm.CustomGpt)
+                .where(orm.CustomGpt.is_active == True)
+                .offset(offset)
+                .limit(limit)
+            )
+            gpts = result.scalars().all()
+            
+            total_result = await db.execute(
+                select(func.count(orm.CustomGpt.id))
+                .where(orm.CustomGpt.is_active == True)
+            )
+            total = total_result.scalar_one()
+            
+            return gpts, total
+        except Exception as e:
+            logger.error(
+                "Error retrieving all Custom GPTs",
+                error=str(e),
+                exc_info=True
+            )
+            raise
+
+    @staticmethod
+    async def get_gpt_by_id_public(db: AsyncSession, gpt_id: str) -> Optional[orm.CustomGpt]:
+        """Get a Custom GPT by its ID (public access)."""
+        try:
+            result = await db.execute(
+                select(orm.CustomGpt)
+                .where(orm.CustomGpt.id == gpt_id)
+                .where(orm.CustomGpt.is_active == True)
+            )
+            gpt = result.scalar_one_or_none()
+            return gpt
+        except Exception as e:
+            logger.error(
+                "Error retrieving Custom GPT (public)",
+                error=str(e),
+                gpt_id=gpt_id,
+                exc_info=True
+            )
+            raise
+
+    @staticmethod
+    async def update_gpt_public(db: AsyncSession, gpt_id: str, gpt_data: schemas.CustomGPTUpdate) -> Optional[orm.CustomGpt]:
+        """Update a Custom GPT's information (public access)."""
+        try:
+            # Get the existing GPT (public access)
+            result = await db.execute(
+                select(orm.CustomGpt)
+                .where(orm.CustomGpt.id == gpt_id)
+                .where(orm.CustomGpt.is_active == True)
+            )
+            gpt = result.scalar_one_or_none()
+            
+            if not gpt:
+                return None
+            
+            # Update only the provided fields
+            update_data = gpt_data.model_dump(exclude_unset=True)
+            for field, value in update_data.items():
+                setattr(gpt, field, value)
+            
+            # Update the updated_at timestamp
+            from datetime import datetime
+            gpt.updated_at = datetime.utcnow()
+            
+            await db.commit()
+            await db.refresh(gpt)
+            return gpt
+            
+        except Exception as e:
+            logger.error(
+                "Error updating Custom GPT (public)",
+                error=str(e),
+                gpt_id=gpt_id,
+                exc_info=True
+            )
+            await db.rollback()
+            raise
+
+    @staticmethod
+    async def delete_gpt_public(db: AsyncSession, gpt_id: str) -> bool:
+        """Delete a Custom GPT (public access)."""
+        try:
+            # Get the existing GPT (public access)
+            result = await db.execute(
+                select(orm.CustomGpt)
+                .where(orm.CustomGpt.id == gpt_id)
+                .where(orm.CustomGpt.is_active == True)
+            )
+            gpt = result.scalar_one_or_none()
+            
+            if not gpt:
+                return False
+            
+            await db.delete(gpt)
+            await db.commit()
+            return True
+            
+        except Exception as e:
+            logger.error(
+                "Error deleting Custom GPT (public)",
+                error=str(e),
+                gpt_id=gpt_id,
+                exc_info=True
+            )
+            await db.rollback()
+            raise

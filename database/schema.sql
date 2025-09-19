@@ -74,18 +74,22 @@ CREATE TABLE IF NOT EXISTS threads (
     title TEXT NOT NULL,
     custom_gpt_id TEXT NOT NULL REFERENCES custom_gpts(id) ON DELETE CASCADE,
     user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    client_id TEXT REFERENCES clients(id), -- Optional link to specific client (from C4 design)
     last_message TEXT,
     message_count INTEGER DEFAULT 0,
     is_archived BOOLEAN DEFAULT FALSE,
     tags TEXT DEFAULT '[]', -- JSON array of strings
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_message_at TIMESTAMP -- Added from C4 design
 );
 
 CREATE INDEX IF NOT EXISTS idx_threads_user_id ON threads(user_id);
 CREATE INDEX IF NOT EXISTS idx_threads_custom_gpt_id ON threads(custom_gpt_id);
+CREATE INDEX IF NOT EXISTS idx_threads_client_id ON threads(client_id);
 CREATE INDEX IF NOT EXISTS idx_threads_archived ON threads(is_archived);
 CREATE INDEX IF NOT EXISTS idx_threads_updated_at ON threads(updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_threads_last_message_at ON threads(last_message_at DESC);
 
 -- ============================================================================
 -- CHAT MESSAGES
@@ -169,6 +173,8 @@ CREATE INDEX IF NOT EXISTS idx_mcp_interactions_success ON mcp_tool_interactions
 
 CREATE TABLE IF NOT EXISTS inference_queue (
     id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    message_id TEXT REFERENCES messages(id),
+    custom_gpt_id TEXT REFERENCES custom_gpts(id), -- Added: Link to Custom GPT configuration
     request_type TEXT NOT NULL CHECK (request_type IN ('chat', 'meeting_transcription', 'document_analysis', 'compliance_check')),
     input_data TEXT NOT NULL, -- JSON object with request data
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
@@ -203,8 +209,9 @@ CREATE TABLE IF NOT EXISTS inference_queue (
     retry_count INTEGER DEFAULT 0,
     error_count INTEGER DEFAULT 0,
     
-    -- Results and errors
-    result_data TEXT, -- JSON object with AI response
+    -- Results and errors  
+    response_content TEXT, -- AI response content
+    response_metadata TEXT, -- JSON object with response metadata
     error_message TEXT,
     
     -- Compliance metrics
@@ -222,6 +229,8 @@ CREATE INDEX IF NOT EXISTS idx_inference_queue_priority ON inference_queue(prior
 CREATE INDEX IF NOT EXISTS idx_inference_queue_user_id ON inference_queue(user_id);
 CREATE INDEX IF NOT EXISTS idx_inference_queue_request_type ON inference_queue(request_type);
 CREATE INDEX IF NOT EXISTS idx_inference_queue_created_at ON inference_queue(created_at);
+CREATE INDEX IF NOT EXISTS idx_inference_queue_message_id ON inference_queue(message_id);
+CREATE INDEX IF NOT EXISTS idx_inference_queue_custom_gpt_id ON inference_queue(custom_gpt_id);
 
 -- ============================================================================
 -- AUDIT TRAIL EVENT LOGS (IMMUTABLE)

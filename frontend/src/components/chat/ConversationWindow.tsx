@@ -34,6 +34,7 @@ interface ConversationWindowProps {
   messages: Message[];
   customGPTs: CustomGPT[];
   selectedCustomGPTId: string;
+  isAIThinking?: boolean;
   onCustomGPTChange: (customGPTId: string) => void;
   onSendMessage: (content: string, attachments?: File[]) => void;
 }
@@ -52,12 +53,12 @@ export function ConversationWindow({
   messages,
   customGPTs,
   selectedCustomGPTId,
+  isAIThinking = false,
   onCustomGPTChange,
   onSendMessage
 }: ConversationWindowProps) {
   const [messageInput, setMessageInput] = useState('');
   const [attachments, setAttachments] = useState<File[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -68,16 +69,17 @@ export function ConversationWindow({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Debug logging for thinking indicator
+  useEffect(() => {
+    console.log('ConversationWindow Debug - isAIThinking:', isAIThinking);
+  }, [isAIThinking]);
+
   const handleSendMessage = () => {
     if (!messageInput.trim() && attachments.length === 0) return;
 
     onSendMessage(messageInput, attachments);
     setMessageInput('');
     setAttachments([]);
-    
-    // Simulate AI typing
-    setIsTyping(true);
-    setTimeout(() => setIsTyping(false), 2000);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -107,7 +109,18 @@ export function ConversationWindow({
   };
 
   const formatTime = (timestamp: string) => {
-    return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    try {
+      // Handle both formats: with and without microseconds
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) {
+        console.error('Invalid timestamp:', timestamp);
+        return 'Invalid date';
+      }
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch (error) {
+      console.error('Error formatting timestamp:', timestamp, error);
+      return 'Invalid date';
+    }
   };
 
   if (!thread) {
@@ -138,7 +151,7 @@ export function ConversationWindow({
             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
               <span>{messages.length} messages</span>
               <span>•</span>
-              <span>Last activity: {formatTime(thread.updatedAt)}</span>
+              <span>Last activity: {formatTime(thread.updated_at)}</span>
               {thread.tags && thread.tags.length > 0 && (
                 <>
                   <span>•</span>
@@ -184,7 +197,7 @@ export function ConversationWindow({
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4 max-w-4xl mx-auto">
           {messages.map((message) => {
-            const messageCustomGPT = customGPTs.find(gpt => gpt.id === message.customGPTId);
+            const messageCustomGPT = customGPTs.find(gpt => gpt.id === (message.custom_gpt_id || message.customGPTId));
             const Icon = message.role === 'user' ? User : 
               (messageCustomGPT ? specializationIcons[messageCustomGPT.specialization] || Bot : Bot);
 
@@ -216,7 +229,7 @@ export function ConversationWindow({
                         {messageCustomGPT.name}
                       </Badge>
                       <span className="text-xs text-muted-foreground">
-                        {formatTime(message.timestamp)}
+                        {formatTime(message.created_at)}
                       </span>
                     </div>
                   )}
@@ -273,7 +286,7 @@ export function ConversationWindow({
                   {/* Timestamp for user messages */}
                   {message.role === 'user' && (
                     <div className="text-xs text-primary-foreground/70 mt-2">
-                      {formatTime(message.timestamp)}
+                      {formatTime(message.created_at)}
                     </div>
                   )}
                 </Card>
@@ -287,8 +300,8 @@ export function ConversationWindow({
             );
           })}
 
-          {/* Typing indicator */}
-          {isTyping && (
+          {/* AI Thinking indicator */}
+          {isAIThinking && (
             <div className="flex gap-3">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                 <Bot className="w-4 h-4 text-primary animate-pulse" />
@@ -300,7 +313,7 @@ export function ConversationWindow({
                     <div className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '0.1s' }} />
                     <div className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '0.2s' }} />
                   </div>
-                  <span className="text-sm">{selectedCustomGPT?.name} is thinking...</span>
+                  <span className="text-sm">{selectedCustomGPT?.name || 'AI Assistant'} is thinking...</span>
                 </div>
               </Card>
             </div>

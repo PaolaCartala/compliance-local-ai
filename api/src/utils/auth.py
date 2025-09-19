@@ -83,13 +83,22 @@ async def get_current_user(token: Optional[str] = Depends(security)) -> Dict[str
     4. Cache user data for performance
     """
     
+    # Debug: Log what we received
+    logger.info(
+        "[MOCK AUTH] get_current_user called",
+        token_received=token,
+        token_type=type(token).__name__ if token else "None",
+        token_is_none=token is None,
+        token_is_falsy=not token
+    )
+    
     # [TODO] Remove mock logic and implement Entra ID JWT validation
     if not token:
         # Return default test user for now
         user_key = "testuser"
         mock_user = MOCK_USERS[user_key].copy()
         
-        logger.debug(
+        logger.info(
             "[MOCK AUTH] No token provided, using default test user",
             user_id=mock_user["id"]
         )
@@ -104,6 +113,13 @@ async def get_current_user(token: Optional[str] = Depends(security)) -> Dict[str
         else:
             token_str = str(token)
             
+        logger.info(
+            "[MOCK AUTH] Parsing token",
+            raw_token=str(token),
+            token_str=token_str,
+            token_type=type(token).__name__
+        )
+            
         # Simple mock token parsing (NOT secure - for demo only)
         if "sarah" in token_str.lower():
             user_key = "sarah.johnson"
@@ -117,6 +133,13 @@ async def get_current_user(token: Optional[str] = Depends(security)) -> Dict[str
             user_key = "admin"
         else:
             user_key = "testuser"
+            
+        logger.info(
+            "[MOCK AUTH] Token parsing result",
+            token_str=token_str,
+            user_key_selected=user_key,
+            contains_sarah="sarah" in token_str.lower()
+        )
             
         mock_user = MOCK_USERS[user_key].copy()
         
@@ -181,7 +204,7 @@ def generate_mock_token(user_key: str) -> str:
     return f"Bearer {mock_token}"
 
 
-async def get_database_user_id(current_user: dict) -> Optional[int]:
+async def get_database_user_id(current_user: dict) -> Optional[str]:
     """
     Map auth system user to database user ID.
     

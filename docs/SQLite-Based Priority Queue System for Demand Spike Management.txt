@@ -1,0 +1,103 @@
+# Converted from: SQLite-Based Priority Queue System for Demand Spike Management.docx
+# Conversion date: 1758205044.9399855
+
+ Add icon	 Add cover
+SQLite-Based Priority Queue System for Demand Spike Management
+SQLite-Based Priority Queue System for Demand Spike Management
+Queue Architecture Overview
+To ensure optimal performance during demand spikes and provide prioritized access based on organizational hierarchy, the Baker Group LLM solution implements a SQLite-based asynchronous request management system with role-based priority queuing. This architecture prevents GPU resource contention while maintaining responsive user experiences across different access levels.
+Core Queue Components
+SQLite Database Schema
+Role-Based Priority System
+Priority Queue Hierarchy
+Asynchronous Request Processing Architecture
+Request Flow Management
+Python
+class AsyncRequestManager:
+def   init  (self, db_path: str):
+self.db = sqlite3.connect(db_path, check_same_thread=False)
+self.executor = ThreadPoolExecutor(max_workers=2) # GPU capacity limit
+self.active_requests = {} 6
+async def submit_request(self, user_context: UserContext,
+request_data: RequestData) -> str:
+"""Submit request to priority queue"""
+priority = PRIORITY_LEVELS[user_context.role] 11
+# Check concurrent request limits
+if await self._check_user_limits(user_context):
+request_id = await self._queue_request(
+user_context, request_data, priority
+16	)
+17
+# Start processing if resources available
+await self._try_process_next()
+return request_id
+else:
+raise ResourceLimitExceeded("User concurrent request limit reached") 23
+async def _process_request_queue(self):
+"""Main queue processing loop"""
+while True:
+try:
+# Get highest priority pending request
+request = await self._get_next_request()
+if request:
+await self._execute_model_inference(request)
+else:
+await asyncio.sleep(1) # No requests, brief pause
+except Exception as e:
+logger.error(f"Queue processing error: {e}")
+await asyncio.sleep(5) # Error recovery delay 37
+Model Resource Management
+Demand Spike Management
+Load Balancing Strategies
+Python
+class DemandSpikeHandler:
+def   init  (self, db_manager: SQLiteQueueManager):
+self.db = db_manager
+self.load_metrics = LoadMetrics() 5
+async def handle_high_demand(self):
+"""Implement demand spike mitigation strategies"""
+queue_depth = await self.db.get_queue_depth() 9
+if queue_depth > HIGH_LOAD_THRESHOLD:
+# Enable aggressive prioritization
+await self._enable_executive_only_mode()
+13
+# Implement request batching for efficiency
+await self._enable_batch_processing()
+16
+# Notify administrators
+await self._send_load_alert()
+19
+async def _enable_batch_processing(self):
+"""Batch similar requests for efficiency"""
+# Group document analysis requests
+doc_requests = await self.db.get_pending_by_type('document')
+if len(doc_requests) >= 3:
+await self._create_batch_job(doc_requests)
+26
+# Group transcript processing requests
+transcript_requests = await self.db.get_pending_by_type('transcript')
+if len(transcript_requests) >= 5:
+await self._create_batch_job(transcript_requests)
+31
+Queue Monitoring & Analytics
+Implementation Benefits for Baker Group
+Operational Advantages
+Fair Resource Allocation: Executive requests receive priority while ensuring all users get service
+Demand Spike Resilience: System maintains responsiveness during peak usage periods
+Audit Compliance: Complete request tracking and timing for regulatory requirements
+Resource Optimization: GPU utilization maximized without overload conditions Performance Characteristics
+Executive Response Time: <30 seconds average for priority requests
+Standard User Response Time: <2 minutes during normal load, <5 minutes during spikes
+Queue Capacity: 500+ concurrent requests in queue without performance degradation
+Throughput: 20-30 requests per hour sustained processing rate Monitoring Dashboard Integration
+Database Maintenance & Optimization
+Automated Cleanup Procedures
+Performance Tuning
+This SQLite-based queue architecture ensures Baker Group's LLM system maintains optimal performance during demand spikes while providing appropriate priority access based on organizational roles. The lightweight SQLite implementation requires minimal additional resources while providing robust request management, comprehensive audit trails, and real-time performance monitoring capabilities essential for financial services compliance.
+The asynchronous design prevents GPU resource contention, ensures fair access across user roles, and maintains system responsiveness even during peak usage periods, positioning Baker Group's AI infrastructure for scalable, reliable operation as adoption grows across the organization.
+10 | 'processing_rate': await self._get_hourly_processing_rate(),
+11 | 'model_utilization': await self._get_model_utilization(),
+12 | 'peak_demand_periods': await self._identify_peak_periods(),
+13 | 'user_satisfaction_score': await self._calculate_satisfaction()
+14 | }
+15

@@ -1,0 +1,31 @@
+# Converted from: Baker Group AI Server Configuration.docx
+# Conversion date: 1758205044.9399855
+
+ Add icon	 Add cover
+Baker Group AI Server Configuration
+Baker Group AI Server Configuration
+Ninja RMM Link to Server
+Admin User / Development Account (IT Glue)
+Git Repository
+Lovable Git Repository
+Installed Packages / Configuration
+O NSSM
+O git
+O git credential
+O PowerShell
+O Python
+O UV
+O dotenvx
+O VS Code
+O service user
+O Ollama
+O Gemma3:27b-it-qat
+O gpt-oss-20b
+O gpt-oss-120b
+O llama3.2-vision-11b
+O CUDA
+O nvdia-smi
+O IIS
+O MS AI Foundry Local
+O gpt-oss-20b
+O phi4

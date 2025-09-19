@@ -124,6 +124,7 @@ async def send_message(
             await queue_service.enqueue_chat_request(
                 db=db,
                 message_id=str(user_message.id),
+                thread_id=thread_id,
                 custom_gpt_id=custom_gpt_id or thread.custom_gpt_id,
                 user_message=content,
                 context_messages=context_messages_dict,

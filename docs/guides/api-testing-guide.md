@@ -26,7 +26,14 @@ API → SQLite Queue → (Inference Service Ready)
 ### **Prerequisites**
 1. ✅ API server running on `http://localhost:8000`
 2. ✅ Database `database/baker_compliant_ai.db` with proper schema
-3. ✅ Valid authentication token (`sarah-token` for demo user)
+3. ✅ Valid authentication token (see available tokens below)
+
+### **🔑 Available Test Tokens**
+| Token | User | Role | Description |
+|-------|------|------|-------------|
+| `Bearer sarah-token` | Sarah Johnson, CFP | Financial Advisor | Standard advisor operations |
+| `Bearer michael-token` | Michael Chen, CFP | Compliance Officer | Compliance and monitoring |
+| `Bearer lisa-token` | Lisa Wang, CFP | Administrator | Full system access |
 
 ### **Step 1: Health Check**
 ```bash
@@ -89,18 +96,51 @@ The system uses mock authentication with pre-configured tokens:
 
 ```bash
 # Available test tokens:
-Authorization: Bearer sarah-token     # Maps to database user ID 1
-Authorization: Bearer michael-token   # Maps to database user ID 2  
-Authorization: Bearer david-token     # Maps to database user ID 3
+Authorization: Bearer sarah-token     # Maps to Sarah Johnson, CFP (Financial Advisor)
+Authorization: Bearer michael-token   # Maps to Michael Chen, CFP (Compliance Officer)  
+Authorization: Bearer lisa-token      # Maps to Lisa Wang, CFP (Administrator)
 ```
 
 ### **User ID Mapping Flow**
-1. **Auth Token** → `current_user["azure_user_id"]` (e.g., "auth0|sarah.johnson")
-2. **Database Lookup** → `get_database_user_id()` function
-3. **Database User ID** → Integer ID (e.g., 1, 2, 3) for database operations
+1. **Auth Token** → Mock user lookup (e.g., "sarah-token" → "sarah.johnson")
+2. **Azure User ID** → Database lookup (e.g., "auth0|sarah.johnson")
+3. **Database User ID** → UUID-based ID for database operations
 
-### **Fixed Authentication Issues**
+### **Current User Database Mapping**
+- **sarah-token** → `auth0|sarah.johnson` → Sarah Johnson, CFP (Financial Advisor)
+- **michael-token** → `auth0|michael.chen` → Michael Chen, CFP (Compliance Officer)
+- **lisa-token** → `auth0|lisa.wang` → Lisa Wang, CFP (Administrator)
+
+### **Token Usage Examples**
+
+#### **Financial Advisor Access (sarah-token)**
+```bash
+# Create thread as Financial Advisor
+curl -X POST "http://localhost:8000/api/v1/threads/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sarah-token" \
+  -d '{"title": "Client Portfolio Review"}'
+```
+
+#### **Compliance Officer Access (michael-token)**
+```bash
+# Access compliance features
+curl -X GET "http://localhost:8000/api/v1/threads/" \
+  -H "Authorization: Bearer michael-token"
+```
+
+#### **Administrator Access (lisa-token)**
+```bash
+# Admin operations
+curl -X GET "http://localhost:8000/api/v1/threads/" \
+  -H "Authorization: Bearer lisa-token"
+```
+
+### **Fixed Authentication Issues (Updated Sept 18, 2025)**
 - ✅ **User mapping**: Auth user IDs now correctly map to database user IDs
+- ✅ **Token mapping**: Updated database users to match mock authentication system
+- ✅ **Available tokens**: `sarah-token`, `michael-token`, `lisa-token` (removed outdated `david-token`)
+- ✅ **Role mapping**: Updated user roles to match business requirements
 - ✅ **Thread access**: Users can only access their own threads  
 - ✅ **Message authorization**: Proper user verification for all operations
 
@@ -108,22 +148,25 @@ Authorization: Bearer david-token     # Maps to database user ID 3
 
 ### **Fixed Database Issues**
 1. ✅ **Database unification**: All services now use `database/baker_compliant_ai.db`
-2. ✅ **Missing message_id column**: Added to inference_queue table
+2. ✅ **Missing message_id column**: Added to inference_queue table and schema updated
 3. ✅ **Status constraint**: Fixed `"queued"` → `"pending"` to match CHECK constraint
 4. ✅ **Database consistency**: Synchronized schema across all services
+5. ✅ **Schema recreation**: Database recreated with complete updated schema (Sept 18, 2025)
 
 ### **Current Database Schema**
 ```sql
--- inference_queue table (corrected)
+-- inference_queue table (corrected with message_id and custom_gpt_id)
 CREATE TABLE inference_queue (
     id TEXT PRIMARY KEY,
+    message_id TEXT REFERENCES messages(id), -- ✅ ADDED - Links queue entries to messages
+    custom_gpt_id TEXT REFERENCES custom_gpts(id), -- ✅ ADDED - Links to Custom GPT configuration
     request_type TEXT NOT NULL CHECK (request_type IN ('chat', 'meeting_transcription', 'document_analysis', 'compliance_check')),
     input_data TEXT NOT NULL,
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
     priority INTEGER DEFAULT 5 CHECK (priority >= 1 AND priority <= 10),
     user_id TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    message_id TEXT DEFAULT NULL  -- ✅ ADDED
+    -- ... additional columns for performance metrics, AI model data, etc.
 );
 ```
 
@@ -658,3 +701,86 @@ python -m src.main
 - Connect React frontend to verified API endpoints
 - Test real-time message updates
 - Verify user experience with working backend
+
+---
+
+## Recent Changes ✅
+
+### **September 18, 2025 - Database Schema & Inference Service Updates**
+
+#### **Issue 1: Missing message_id Column**
+- **Problem**: `OperationalError: table inference_queue has no column named message_id`
+- **Root Cause**: `queue_service.py` was updated to include `message_id` but `database/schema.sql` wasn't updated
+- **Solution**: 
+  1. ✅ Updated `database/schema.sql` to include `message_id TEXT REFERENCES messages(id)` in `inference_queue` table
+  2. ✅ Added index for `message_id` column: `idx_inference_queue_message_id`
+
+#### **Issue 2: Column Name Mismatch in Inference Service**
+- **Problem**: `KeyError: 'request_data'` in `inference/src/services/queue_service.py:81`
+- **Root Cause**: API service writes to `input_data` column but inference service was reading from `request_data`
+- **Solution**: 
+  1. ✅ **Fixed `inference/src/services/queue_service.py`**: Changed `request["request_data"]` → `request["input_data"]`
+  2. ✅ **Schema verification**: Confirmed database has `input_data` column (not `request_data`)
+
+#### **Issue 3: Missing custom_gpt_id Column**
+- **Problem**: `KeyError: 'custom_gpt_id'` in `inference/src/services/queue_service.py`
+- **Root Cause**: API service expects `custom_gpt_id` column but `inference_queue` table didn't have it
+- **Solution**: 
+  1. ✅ **Updated `database/schema.sql`**: Added `custom_gpt_id TEXT REFERENCES custom_gpts(id)` to `inference_queue`
+  2. ✅ **Added index**: `idx_inference_queue_custom_gpt_id` for performance
+  3. ✅ **Recreated database**: Complete schema with all required columns
+  4. ✅ **Added test data**: Custom GPTs seeded for testing (`gpt_portfolio_001`, etc.)
+
+#### **Complete Resolution Steps**
+  1. ✅ **Updated `database/schema.sql`**: Added `message_id` and `custom_gpt_id` columns to `inference_queue`
+  2. ✅ **Updated `database/init_database.py`**: Fixed mock users to use correct Azure IDs (`auth0|sarah.johnson`, etc.)
+  3. ✅ **Updated `database/seed_database.py`**: Fixed database path and synchronized user data with mock auth system
+  4. ✅ **Fixed inference service**: Column name mismatches resolved (`request_data` → `input_data`)
+  5. ✅ **Recreated database**: Complete schema with all required columns and test data
+  6. ✅ **Added Custom GPTs**: Test configurations for portfolio analysis, CRM, and compliance
+
+- **Status**: ✅ **All database schema and service integration issues resolved** - Complete end-to-end flow ready
+- **Test Data**: ✅ Users, Custom GPTs, and proper schema all configured
+- **Next**: Start inference service and test complete message flow: Postman → API → Queue → Inference → Response
+
+### **Testing Complete Inference Flow**
+
+#### **Step 1: Start Inference Service**
+```bash
+# Start the inference service to process queued messages
+cd inference
+python -m src.main
+```
+
+#### **Step 2: Test End-to-End Message Flow**
+```bash
+# 1. Send message via API (should queue for processing)
+curl -X POST "http://localhost:8000/api/v1/chat/messages" \
+  -H "Authorization: Bearer sarah-token" \
+  -F "content=Hello! Can you help me with portfolio analysis?" \
+  -F "thread_id=your-thread-id-here" \
+  -F "custom_gpt_id=gpt_portfolio_001"
+
+# 2. Check queue status (message should be processing or completed)
+sqlite3 database/baker_compliant_ai.db "
+  SELECT id, status, message_id, created_at, started_at, completed_at 
+  FROM inference_queue 
+  ORDER BY created_at DESC 
+  LIMIT 5;"
+
+# 3. Retrieve messages (should include AI response)
+curl -X GET "http://localhost:8000/api/v1/chat/messages/your-thread-id-here" \
+  -H "Authorization: Bearer sarah-token"
+```
+
+### **Database Initialization Commands (Updated)**
+```bash
+# Remove old database (if exists)
+rm database/baker_compliant_ai.db
+
+# Initialize with correct schema and users
+python database/init_database.py
+
+# Optional: Add additional test data
+python database/seed_database.py
+```

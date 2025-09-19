@@ -26,6 +26,7 @@ class QueueService:
         self,
         db: AsyncSession,
         message_id: str,
+        thread_id: str,
         custom_gpt_id: str,
         user_message: str,
         context_messages: list,
@@ -39,6 +40,7 @@ class QueueService:
         Args:
             db: Database session
             message_id: ID of the message to process
+            thread_id: ID of the thread containing the message
             custom_gpt_id: ID of the Custom GPT configuration
             user_message: User's message content
             context_messages: Previous conversation context
@@ -54,6 +56,7 @@ class QueueService:
             # Create input_data JSON payload
             input_data = {
                 "message_id": message_id,
+                "thread_id": thread_id,
                 "custom_gpt_id": custom_gpt_id,
                 "user_message": user_message,
                 "context_messages": context_messages,
@@ -64,6 +67,7 @@ class QueueService:
                 "Attempting to enqueue chat request",
                 request_id=request_id,
                 message_id=message_id,
+                thread_id=thread_id,
                 custom_gpt_id=custom_gpt_id,
                 user_id=user_id
             )
@@ -100,6 +104,7 @@ class QueueService:
                 "Chat request enqueued successfully",
                 request_id=request_id,
                 message_id=message_id,
+                thread_id=thread_id,
                 custom_gpt_id=custom_gpt_id,
                 priority=priority
             )

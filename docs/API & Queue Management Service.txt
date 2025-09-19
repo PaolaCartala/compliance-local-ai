@@ -1,0 +1,262 @@
+# Converted from: API & Queue Management Service.docx
+# Conversion date: 1758205044.9399855
+
+API & Queue Management Service
+Python
+# api_service.py
+from fastapi import FastAPI, WebSocket, Depends
+from sqlalchemy.orm import Session
+class APIService:
+def 	init	(self):
+self.app = FastAPI(title="Baker Group LLM API")
+self.inference_client =
+InferenceClient("http://localhost:8001")
+	self.queue_manager = SQLiteQueueManager("queue.db")
+self.websocket_manager = WebSocketManager() 14
+@self.app.post("/api/v1/submit-request")
+	async def submit_request(self, request: RequestModel,
+user: UserContext =
+Depends(get_current_user)):
+"""Submit request to processing queue"""
+try:
+# Validate request and check user limits
+await self._validate_request(request, user) 22
+# Queue request with priority
+request_id = await
+self.queue_manager.enqueue_request(
+user_context=user,
+request_data=request,
+priority=PRIORITY_LEVELS[user.role]
+28	)
+29
+# Notify inference service of new request
+await
+self.inference_client.notify_new_request()
+32
+# Send real-time update to user
+await
+self.websocket_manager.send_user_update(
+	user.id, {"request_id": request_id, "status": "queued"}
+36	)
+37
+38		return {"request_id": request_id, "estimated_wait": await
+self._estimate_wait_time(user.role)}
+39
+except Exception as e:
+logger.error(f"Request submission failed:
+{e}")
+	raise HTTPException(status_code=500, detail="Request processing failed")
+43
+44		@self.app.get("/api/v1/request- status/{request_id}")
+45	async def get_request_status(self, request_id: str,
+46	user: UserContext =
+Depends(get_current_user)):
+47	"""Get current request status and results"""
+48	request_status = await
+self.queue_manager.get_request_status(request_id, user.id)
+self.queue_manager.get_response_data(request_id)
+53		return {"status": "completed", "result": result}
+54
+55	return request_status
+56
+@self.app.websocket("/ws/{user_id}")
+	async def websocket_endpoint(self, websocket: WebSocket, user_id: str):
+"""Real-time updates for request status"""
+	await self.websocket_manager.connect(websocket, user_id)
+try:
+while True:
+	# Keep connection alive and handle ping/pong
+await websocket.receive_text()
+except WebSocketDisconnect:
+66
+self.websocket_manager.disconnect(websocket, user_id)
+67
+class InferenceClient:
+	"""Client for communicating with inference service"""
+def 	init	(self, inference_url:
+self.client =
+str):
+httpx.AsyncClient(base_url=inference_url, timeout=300.0)
+LLM Inference Service
+Python
+# inference_service.py
+from fastapi import FastAPI
+import asyncio
+import sqlite3
+from contextlib import asynccontextmanager
+import time
+7
+class InferenceService:
+def 	init	(self):
+	self.app = FastAPI(title="Baker Group Inference Service")
+	self.queue_manager = SQLiteQueueManager("queue.db")
+self.model_manager = ModelResourceManager()
+self.processing_loop_task = None 14
+@asynccontextmanager
+async def lifespan(self, app: FastAPI):
+"""Manage service lifecycle"""
+# Startup
+await self.model_manager.load_models()
+self.processing_loop_task =
+asyncio.create_task(self._processing_loop())
+yield
+# Shutdown
+if self.processing_loop_task:
+self.processing_loop_task.cancel()
+await self.model_manager.cleanup()
+26
+async def _processing_loop(self):
+"""Main inference processing loop"""
+while True:
+try:
+# Get next highest priority request
+request = await
+self.queue_manager.get_next_request()
+33
+if request:
+await
+self._process_inference_request(request)
+else:
+	await asyncio.sleep(1)	# Brief pause if no requests
+38
+except Exception as e:
+logger.error(f"Processing loop error:
+{e}")
+	await asyncio.sleep(5)	# Error recovery delay
+42
+	async def _process_inference_request(self, request: QueuedRequest):
+"""Process individual inference request"""
+try:
+# Update request status to processing
+await
+self.queue_manager.update_request_status(request.id, "processing")
+48
+	# Determine appropriate model and acquire resource lock
+if request.model_target == "gpt-oss-20b":
+async with
+self.model_manager.gpt_oss_lock:
+result = await
+self._execute_text_inference(request)
+else:	# llama3.2-vision-11b
+async with
+self.model_manager.vision_lock:
+result = await
+self._execute_vision_inference(request)
+56
+# Store result and update status
+await
+self.queue_manager.store_response(request.id, result)
+await
+self.queue_manager.update_request_status(request.id, "completed")
+60
+	# Notify API service of completion (optional webhook)
+	await self._notify_completion(request.id, request.user_id)
+63
+except Exception as e:
+await
+self.queue_manager.update_request_status(request.id, "failed", str(e))
+logger.error(f"Inference request
+{request.id} failed: {e}")
+67
+@self.app.post("/internal/process-queue")
+async def trigger_queue_processing(self):
+	"""Internal endpoint to trigger queue processing"""
+	# This endpoint allows API service to notify of new requests
+return {"status": "processing triggered"} 73
+@self.app.get("/health")
+async def health_check(self):
+"""Health check endpoint"""
+model_status = await
+self.model_manager.get_model_status()
+gpu_status = await
+self.model_manager.get_gpu_status()
+79
+return {
+"status": "healthy" if
+model_status["loaded"] else "degraded",
+"models": model_status,
+"gpu": gpu_status,
+"queue_depth": await
+self.queue_manager.get_queue_depth()
+85	}
+86
+class ModelResourceManager:
+"""Manages Ollama models and GPU resources"""
+def 	init	(self):
+self.gpt_oss_lock = asyncio.Semaphore(1)
+self.vision_lock = asyncio.Semaphore(1)
+self.ollama_client = OllamaClient() 93
+async def load_models(self):
+"""Initialize and load both models"""
+	await self.ollama_client.pull_model("gpt- oss:20b")
+await self.ollama_client.pull_model("llama3.2-
+inter-service API
+Python
+# Communication between API service and Inference service
+class ServiceCommunication:
+def 	init	(self):
+self.api_service_url = "http://localhost:8000"
+	self.inference_service_url = "http://localhost:8001"
+6
+# API Service -> Inference Service
+async def notify_new_request(self):
+	"""API notifies inference of new queued requests"""
+endpoint = f"
+{self.inference_service_url}/internal/process-queue"
+11
+async def check_inference_health(self):
+	"""API checks if inference service is available"""
+endpoint = f"
+{self.inference_service_url}/health"
+15
+	# Inference Service -> API Service (optional webhook)
+	async def notify_completion(self, request_id: str, user_id: str):
+	"""Inference notifies API when request completes"""
+endpoint = f"
+{self.api_service_url}/internal/request-completed"
+	payload = {"request_id": request_id, "user_id": user_id}
+21
+healthcheck service
+Python
+class ServiceHealthMonitor:
+def 	init	(self):
+self.api_service = "http://localhost:8000"
+	self.inference_service = "http://localhost:8001"
+5
+async def monitor_services(self):
+"""Continuous service health monitoring"""
+while True:
+api_health = await
+self._check_service_health(self.api_service)
+inference_health = await
+self._check_service_health(self.inference_service)
+11
+if not api_health:
+	await self._alert_service_down("API Service")
+if not inference_health:
+await
+self._alert_service_down("Inference Service")
+16
+17		await asyncio.sleep(30)	# Check every 30 seconds
+18
+async def get_system_status(self):
+"""Get overall system health status"""
+return {
+"api_service": await
+self._detailed_health_check(self.api_service),
+"inference_service": await
+self._detailed_health_check(self.inference_service),
+	"queue_metrics": await self._get_queue_metrics(),
+4 | import | asyncio
+5 | import | httpx
+6 | import | logging
+7
+49
+50 | if | request_status["status"] == "completed":
+51 | # Retrieve result from response storage
+52 | result = await
+25 | "gpu_status": await self._get_gpu_metrics()
+26 | }
+27
+28
+29

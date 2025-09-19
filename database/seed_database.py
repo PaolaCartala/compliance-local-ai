@@ -18,30 +18,30 @@ from typing import Dict, List
 
 def get_database_path() -> str:
     """Get the path to the shared database."""
-    return str(Path(__file__).parent / "database" / "baker_compliant_ai.db")
+    return str(Path(__file__).parent / "baker_compliant_ai.db")
 
 
-# Frontend mock users from AuthContext.tsx
+# Frontend mock users - consistent with mock authentication system
 FRONTEND_USERS = [
     {
         "id": "1",
         "azure_user_id": "auth0|sarah.johnson",
-        "email": "sarah.johnson@wealthfirm.com",
-        "display_name": "Sarah Johnson",
+        "email": "sarah.johnson@bakergroup.com",
+        "display_name": "Sarah Johnson, CFP",
         "role": "financial_advisor"
     },
     {
         "id": "2", 
-        "azure_user_id": "auth0|jennifer.walsh",
-        "email": "jennifer.walsh@wealthfirm.com",
-        "display_name": "Jennifer Walsh",
+        "azure_user_id": "auth0|michael.chen",
+        "email": "michael.chen@bakergroup.com",
+        "display_name": "Michael Chen, CFP",
         "role": "compliance_officer"
     },
     {
         "id": "3",
-        "azure_user_id": "auth0|michael.chen",
-        "email": "michael.chen@wealthfirm.com", 
-        "display_name": "Michael Chen",
+        "azure_user_id": "auth0|lisa.wang",
+        "email": "lisa.wang@bakergroup.com", 
+        "display_name": "Lisa Wang, CFP",
         "role": "administrator"
     }
 ]
